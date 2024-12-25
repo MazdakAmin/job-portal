@@ -32,7 +32,7 @@ const router = createRouter({
       path: '/job/:id',
       name: 'job',
       component: JobView
-    }
+    },
   ],
 })
 router.beforeEach((to, from, next) => {
