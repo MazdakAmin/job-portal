@@ -16,9 +16,9 @@
 
                 <div>
                     <ul class="mb-6 flex flex-col gap-1.5">
-                        <RouterLink to="/dashboard"
+                        <RouterLink to="/"
                             class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4">
-                            Dashboard</RouterLink>
+                            Home</RouterLink>
                             <RouterLink to="/admin-jobs"
                             class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4">
                             Users</RouterLink>

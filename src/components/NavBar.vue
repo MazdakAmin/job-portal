@@ -31,9 +31,10 @@
                 'py-2',
               ]">Jobs
               </RouterLink>
-              {{ console.log(isRouteActive('/jobs')) }}
-              <RouterLink to="/add-job" class="text-white hover:bg-green-900 hover:text-white rounded-md px-3 py-2">Add
-                Job</RouterLink>
+              <RouterLink
+              v-if="isLoggedIn" 
+              to="/dashboard"
+               class="text-white hover:bg-green-900 hover:text-white rounded-md px-3 py-2">Dashboard</RouterLink>
             </div>
           </div>
         </div>
@@ -44,10 +45,12 @@
 <script>
 import logo from "@/assets/img/logo.png";
 import { RouterLink, useRoute } from "vue-router";
+import LocalStorageService from "../utilites/LocalStorageService";
 export default {
   data() {
     return {
-      logo: logo
+      logo: logo,
+      isLogIn:false
     }
   },
   components: {
@@ -57,7 +60,13 @@ export default {
     isRouteActive(path) {
       const route = useRoute();
       return route.path == path;
+    },
+    isLoggedIn(){
+      this.isLogIn = LocalStorageService.isLoggedIn();
     }
+  },
+  mounted() {
+    this.isLoggedIn();
   }
 }
 </script>

@@ -10,6 +10,6 @@ export default {
             type:String,
             default:"bg-gray-100"
         }
-    }
+    },
 }
 </script>
