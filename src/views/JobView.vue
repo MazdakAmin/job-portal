@@ -1,4 +1,5 @@
 <template>
+    <NavBar />
     <section class="bg-green-50">
         <div class="container m-auto py-10 px-6">
             <div class="grid grid-cols-1 md:grid-cols-70/30 w-full gap-6">
@@ -61,16 +62,62 @@
                     <!-- Manage -->
                     <div class="bg-white p-6 rounded-lg shadow-md mt-6">
                         <h3 class="text-xl font-bold mb-6">Manage Job</h3>
-                        <a href="add-job.html"
-                            class="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">Edit
-                            Job</a>
-                        <button
-                            class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">
-                            Delete Job
-                        </button>
+                        <button @click.prevent="toggleModal()"
+                            class="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">Apply</button>
                     </div>
                 </aside>
             </div>
         </div>
+
+<!-- modal -->
+        <div v-if="showModal" class="fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-50 z-10">
+            <div class="bg-white p-6 rounded-lg shadow-md w-11/12 md:w-1/3">
+                <h2 class="text-2xl font-bold text-green-800 mb-6">Apply for Senior Vue Developer</h2>
+                <form>
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email"
+                            class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="resume" class="block text-sm font-medium text-gray-700">Resume (PDF)</label>
+                        <input type="file" id="resume" name="resume" accept="application/pdf"
+                            class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+
+                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline">
+                        Submit Application
+                    </button>
+                </form>
+                <button @click.prevent="toggleModal()" class="mt-4 text-center w-full text-red-500 font-bold">
+                    Cancel
+                </button>
+            </div>
+        </div>
     </section>
 </template>
+
+<script>
+import NavBar from '@/components/NavBar.vue';
+
+export default {
+    data() {
+        return {
+            showModal: false
+        }
+    },
+    methods: {
+        toggleModal() {
+            this.showModal = !this.showModal;
+        }
+    },
+    components: {
+        NavBar
+    }
+}
+</script>
+
+<style scoped>
+
+</style>
