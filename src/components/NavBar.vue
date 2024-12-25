@@ -32,7 +32,7 @@
               ]">Jobs
               </RouterLink>
               <RouterLink
-              v-if="isLoggedIn" 
+              v-if="isLogIn" 
               to="/dashboard"
                class="text-white hover:bg-green-900 hover:text-white rounded-md px-3 py-2">Dashboard</RouterLink>
             </div>
