@@ -1,78 +1,69 @@
 <template>
-    <header
-      class="sticky top-0 z-999 flex w-full bg-green-700 drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
-    >
-      <div class="flex flex-grow items-center justify-between py-4 px-4 shadow-2 md:px-6 2xl:px-11">
-        <div class="flex items-center gap-2 sm:gap-4 lg:hidden">
-          <!-- Hamburger Toggle BTN -->
-          <button
-            class="z-99999 block rounded-sm border border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark lg:hidden"
+  <header
+    class="sticky top-0 z-999 flex w-full bg-green-700 drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none"
+  >
+    <div class="flex flex-grow items-center justify-between py-4 px-4 shadow-2 md:px-6 2xl:px-11">
+      <div class="flex items-center gap-2 sm:gap-4 lg:hidden">
+        
+      </div>
+      <div class="hidden sm:block"></div>
+
+      <div class="flex items-center gap-3 2xsm:gap-7">
+        <div class="relative">
+          <img
+            src="https://images.pexels.com/photos/29725797/pexels-photo-29725797/free-photo-of-festive-scrabble-tiles-for-merry-christmas.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+            alt="Profile"
+            class="h-10 w-10 rounded-full  cursor-pointer"
+            @click="toggleDropdown"
+          />
+
+          <div
+            v-if="isDropdownOpen"
+            class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-50"
           >
-            <span class="relative block h-5.5 w-5.5 cursor-pointer">
-              <span class="block absolute right-0 h-full w-full">
-                <span
-                  class="relative top-0 left-0 my-1 block h-0.5 w-0 rounded-sm bg-black delay-[0] duration-200 ease-in-out dark:bg-white"
-                  
-                ></span>
-                <span
-                  class="relative top-0 left-0 my-1 block h-0.5 w-0 rounded-sm bg-black delay-150 duration-200 ease-in-out dark:bg-white"
-                  
-                ></span>
-                <span
-                  class="relative top-0 left-0 my-1 block h-0.5 w-0 rounded-sm bg-black delay-200 duration-200 ease-in-out dark:bg-white"
-                  
-                ></span>
-              </span>
-              <span class="block absolute right-0 h-full w-full rotate-45">
-                <span
-                  class="absolute left-2.5 top-0 block h-full w-0.5 rounded-sm bg-black delay-300 duration-200 ease-in-out dark:bg-white"
-                  
-                ></span>
-                <span
-                  class="delay-400 absolute left-0 top-2.5 block h-0.5 w-full rounded-sm bg-black duration-200 ease-in-out dark:bg-white"
-                ></span>
-              </span>
-            </span>
-          </button>
-          <!-- Hamburger Toggle BTN -->
-          <router-link class="block flex-shrink-0 lg:hidden" to="/">
-            <img src="@/assets/img/logo-icon.svg" alt="Logo" />
-          </router-link>
-        </div>
-        <div class="hidden sm:block">
-         
-        </div>
-  
-        <div class="flex items-center gap-3 2xsm:gap-7">
-          <ul class="flex items-center gap-2 2xsm:gap-4">
-            <li>
-              <!-- Dark Mode Toggler -->
-              <!-- <DarkModeSwitcher /> -->
-              <!-- Dark Mode Toggler -->
-            </li>
-  
-            <!-- Notification Menu Area -->
-            <!-- <DropdownNotification /> -->
-            <!-- Notification Menu Area -->
-  
-            <!-- Chat Notification Area -->
-            <!-- <DropdownMessage /> -->
-            <!-- Chat Notification Area -->
-          </ul>
-  
-          <!-- User Area -->
-          <!-- <DropdownUser /> -->
-           <DropDwonUser />
-          <!-- User Area -->
+            <button
+              class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+              @click="logout"
+            >
+              Logout
+            </button>
+          </div>
         </div>
       </div>
-    </header>
-  </template>
-  <script>
-import DropDwonUser from '@/components/DropDwonUser.vue';
-export default{
-    components:{
-        DropDwonUser
-    }
-}
+    </div>
+  </header>
+</template>
+
+<script>
+import axiosInstance from '@/utils/axiosInstance';
+import { useAuthStore } from "@/stores/authStore"; 
+import { useAlertStore } from '@/stores/alertStore';
+export default {
+  data() {
+    return {
+      isDropdownOpen: false,
+    };
+  },
+  methods: {
+    toggleDropdown() {
+      this.isDropdownOpen = !this.isDropdownOpen;
+    },
+    logout() {
+  const authStore = useAuthStore(); 
+  const alertStore = useAlertStore();
+  axiosInstance.post('/user/logout')
+    .then((res) => {
+      authStore.logout();
+      console.log(res)
+      this.$router.push('/');
+    })
+    .catch((error) => {
+     console.log(error)
+    });
+},
+  },
+};
 </script>
+
+<style scoped>
+</style>

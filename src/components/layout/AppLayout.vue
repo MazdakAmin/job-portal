@@ -14,6 +14,7 @@
         <!-- ===== Main Content Start ===== -->
         <main>
           <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+            <AlertMessage />
             <slot></slot>
           </div>
         </main>
@@ -24,11 +25,13 @@
   </template>
   <script>
   import Sidbar from '@/components/Sidbar.vue';
-  import Header from '@/components/Header.vue'
+  import Header from '@/components/Header.vue';
+  import AlertMessage from '../AlertMessage.vue';
   export default{
     components:{
         Sidbar,
-        Header
+        Header,
+        AlertMessage
     }
   }
 </script>

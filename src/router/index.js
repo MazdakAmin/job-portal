@@ -4,7 +4,9 @@ import Dashboard from '@/views/Dashboard.vue';
 import Jobs from '@/views/Jobs.vue';
 import NotFound from '@/views/NotFound.vue';
 import JobView from '@/views/JobView.vue';
-import LocalStorageService from '@/utilites/LocalStorageService';
+import LocalStorageService from '@/utils/LocalStorageService';
+import Register from '@/views/Register.vue';
+import Login from '@/views/Login.vue';
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -12,6 +14,16 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
+    },
+    {
+      path:'/register',
+      name:'register',
+      component:Register
+    },
+    {
+      path:'/login',
+      name:'login',
+      component:Login
     },
     {
       path: '/dashboard',
@@ -37,7 +49,7 @@ const router = createRouter({
 })
 router.beforeEach((to, from, next) => {
   if (!LocalStorageService.isLoggedIn()) {
-    if (to.name === 'home' || to.name === 'jobs' || to.name === 'job') {
+    if (to.name === 'home' || to.name === 'jobs' || to.name === 'job' || to.name === 'login' || to.name === 'register') {
       next();
     } else {
       next({ name: 'home' });
