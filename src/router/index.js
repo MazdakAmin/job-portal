@@ -64,14 +64,13 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore;
-  const { isLogin, type } = authStore;
+  const { isLogin, type } = authStore();
   const publicRoutes = ['home', 'jobs', 'job', 'login', 'register'];
-console.log(type)
   if (!isLogin && !publicRoutes.includes(to.name)) {
     return next({ name: 'home' });
   }
 
-  if (type === 'user' && ['panel-jobs', 'users'].includes(to.name)) {
+  if (type === 'user' && ['panel-jobs'].includes(to.name)) {
     return next({ name: 'home' });
   }
 

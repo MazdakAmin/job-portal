@@ -16,17 +16,26 @@
 
                 <div>
                     <ul class="mb-6 flex flex-col gap-1.5">
+                        <RouterLink to="/dashboard"
+                            class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4">
+                            
+                            <li class="pi pi-gauge" style="font-size: 1.5rem"></li>
+                            Dashboard</RouterLink>
                         <RouterLink to="/"
                             class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4">
+                            <li class="pi pi-home" style="font-size: 1.5rem"></li>
                             Home</RouterLink>
-                            <RouterLink to="/admin-jobs"
+                            <RouterLink to="/users"
                             class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4">
+                            <i class="pi pi-user" style="font-size: 1.5rem"></i>
                             Users</RouterLink>
                             <RouterLink to="/admin-jobs"
                             class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4">
+                            <li class="pi pi-briefcase" style="font-size: 1.5rem"></li>
                             Jobs</RouterLink>
                             <RouterLink to="/admin-jobs"
                             class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4">
+                            <li class="pi pi-file-check" style="font-size: 1.5rem"></li>
                             Applications</RouterLink>
 
                     </ul>

@@ -25,6 +25,7 @@
       </div>
     </div>
   </section>
+  
   <!-- Job Creation Modal -->
   <div v-if="showJobModal" class="fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-50 z-10">
     <div class="bg-white p-6 rounded-lg shadow-md w-11/12 md:w-3/4">
@@ -114,11 +115,10 @@
 <script>
 import Card from '@/components/Card.vue';
 import { RouterLink } from 'vue-router';
-import LocalStorageService from '@/utils/LocalStorageService.js';
+import { useAuthStore } from '@/stores/authStore';
 export default {
   data() {
     return {
-      isLoggIn: false,
       showJobModal: false
     }
   },
@@ -127,20 +127,15 @@ export default {
     RouterLink
   },
   methods: {
-    isLoggedIn() {
-      this.isLogIn = LocalStorageService.isLoggedIn();
-    },
     toggleForm(){
       this.showJobModal = !this.showJobModal
       console.log(this.showJobModal);
     }
   },
-  mounted() {
-    this.isLoggedIn();
-  },
   computed:{
     isNotUser (){
-      return sessionStorage.getItem('type') !== 'user'
+      const authStore = useAuthStore();
+      return authStore.type !== 'user';
     }
   }
 }
