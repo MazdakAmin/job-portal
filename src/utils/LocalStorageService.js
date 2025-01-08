@@ -1,7 +1,7 @@
 export default class LocalStorageService {
     static setItem(key, value) {
         try {
-            localStorage.setItem(key, JSON.stringify(value));
+            sessionStorage.setItem(key, JSON.stringify(value));
         } catch (error) {
             console.error("Error setting item in localStorage:", error);
         }
@@ -9,7 +9,7 @@ export default class LocalStorageService {
 
     static getItem(key) {
         try {
-            const value = localStorage.getItem(key);
+            const value = sessionStorage.getItem(key);
             return value ? JSON.parse(value) : null;
         } catch (error) {
             console.error("Error getting item from localStorage:", error);
@@ -19,7 +19,7 @@ export default class LocalStorageService {
 
     static removeItem(key) {
         try {
-            localStorage.removeItem(key);
+            sessionStorage.removeItem(key);
         } catch (error) {
             console.error("Error removing item from localStorage:", error);
         }
@@ -27,13 +27,13 @@ export default class LocalStorageService {
 
     static clear() {
         try {
-            localStorage.clear();
+            sessionStorage.clear();
         } catch (error) {
             console.error("Error clearing localStorage:", error);
         }
     }
 
     static isLoggedIn() {
-        return !!localStorage.getItem("access-token");
+        return !!sessionStorage.getItem("access-token");
     }
 }

@@ -23,7 +23,7 @@
           >
             <button
               class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
-              @click="logout"
+              @click.prevent="logout"
             >
               Logout
             </button>
@@ -58,7 +58,7 @@ export default {
       this.$router.push('/');
     })
     .catch((error) => {
-     console.log(error)
+      alertStore.setAlertMessage(error?.response?.data?.message || "Somthing went wrong" , 'error');
     });
 },
   },

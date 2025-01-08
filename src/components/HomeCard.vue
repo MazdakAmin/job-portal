@@ -17,6 +17,7 @@
             List your job to find the perfect developer for the role
           </p>
           <button  @click.prevent="toggleForm"
+          :disabled="isNotUser"
             class="inline-block bg-green-500 text-white rounded-lg px-4 py-2 hover:bg-green-600">
             Add Job
           </button>
@@ -136,6 +137,11 @@ export default {
   },
   mounted() {
     this.isLoggedIn();
+  },
+  computed:{
+    isNotUser (){
+      return sessionStorage.getItem('type') !== 'user'
+    }
   }
 }
 </script>
