@@ -51,7 +51,7 @@
                             <input type="text" id="name" placeholder="Enter Your Name" 
                                 class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                                 v-model="formData.firstname"
-                                required />
+                                 />
                         </div>
 
                         <!-- Email -->
@@ -60,7 +60,7 @@
                             <input type="email" id="email"  placeholder="Enter Your Email"
                                 class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                                 v-model="formData.email"
-                                required />
+                                 />
                         </div>
 
                         <!-- Password -->
@@ -70,6 +70,7 @@
                                 placeholder="Enter Password"
                                 class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                                 v-model="formData.password"
+                                required
                                 />
                         </div>
 
@@ -79,6 +80,7 @@
                             <input type="password" id="password-confirmation" placeholder="Confirm Password"
                                 
                                 class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                required
                                  />
                         </div>
 
@@ -87,7 +89,7 @@
                       
                      <div class="mb-4">
                             <label for="type" class="block text-sm font-medium text-gray-700">Role</label>
-                            <select id="type" v-model="formData.role" class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required>
+                            <select id="type" v-model="formData.role" class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required >
                                 <option value="admin">Admin</option>
                                 <option value="employer">Employer</option>
                                 <option value="user">User</option>
@@ -112,7 +114,7 @@
 import AppLayout from '@/components/layout/AppLayout.vue';
 import axiosIntance from '@/utils/axiosInstance';
 import { useAlertStore } from '@/stores/alertStore';
-import { useConfirmationStore } from '@/stores/confirmStore';
+import { useConfirmStore } from '@/stores/confirmStore';
 export default {
     data(){
         return {
@@ -170,27 +172,27 @@ export default {
         try{
             if(this.isEditMod){ 
             response = await axiosIntance.put(`/user/edituser/${this.formData.is}`);
-            console.log(response);
-            
+            alertStore.setAlertMessage(response?.data?.message || 'User Updated successfully!' , 'success');
         }else{
             response = await axiosIntance.post('/user/register',this.formData);
-            alertStore.setAlertMessage(response?.data?.message || 'User added successfully','success');
+            alertStore.setAlertMessage(response?.data?.message || "created successfully!");
         }
         this.closeForm();
         this.fetchUsers()
         }catch(error){
-            console.log(error)
+            alertStore.setAlertMessage(error?.response?.data?.message)
         }
     },
     onDelete(userId){
-        const confirmStore = useConfirmationStore();
+        const confirmStore = useConfirmStore();
         const alertStore = useAlertStore();
         confirmStore.openConfirmModal("You want to delete this user?" , async () =>{
             try{
-                console.log(userId);
-                
+                const response = await axiosIntance.delete(`user/${userId}`);
+                alertStore.setAlertMessage("User deleted successfully!" , 'success');
+                this.fetchUsers();
             }catch(error){
-                console.log(error);
+                alertStore.setAlertMessage(error?.response?.data?.message || "Somthing went wrong");
             }
         })
     }

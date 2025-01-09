@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
-
-export const useConfirmationStore = defineStore('confirm' , {
+export const useConfirmStore = defineStore('confirm' , {
     state: () => ({
         showModal : false,
         message:'',
@@ -9,8 +8,8 @@ export const useConfirmationStore = defineStore('confirm' , {
     actions:{
         openConfirmModal(message,onConfirm){
             this.message = message;
-            this.onConfirmCallback = onConfirm;
             this.showModal = true;
+            this.onConfirmCallback = onConfirm;
         },
         closeConfirmModal(){
             this.showModal = false;
@@ -19,7 +18,7 @@ export const useConfirmationStore = defineStore('confirm' , {
         },
         confirm(){
             if(this.onConfirmCallback){
-                this.openConfirmModal();
+                this.onConfirmCallback();
                 this.closeConfirmModal();
             }
         }

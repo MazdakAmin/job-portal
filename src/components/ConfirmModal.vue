@@ -14,14 +14,13 @@
         </div>
     </div>
 </template>
-
 <script>
-import { useConfirmationStore } from '@/stores/confirmStore';
+import { useConfirmStore } from '@/stores/confirmStore';
 
 export default {
     data() {
         return {
-            confirmStore: useConfirmationStore(),
+            confirmStore: useConfirmStore(),
         };
     },
     computed: {
