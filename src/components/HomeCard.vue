@@ -16,7 +16,7 @@
           <p class="mt-2 mb-4">
             List your job to find the perfect developer for the role
           </p>
-          <button  @click.prevent="toggleForm"
+          <button  @click.prevent="toggleForm()"
           :disabled="isNotUser"
             class="inline-block bg-green-500 text-white rounded-lg px-4 py-2 hover:bg-green-600">
             Add Job
@@ -25,7 +25,7 @@
       </div>
     </div>
   </section>
-  
+  {{ console.log(isNotUser) }}
   <!-- Job Creation Modal -->
   <div v-if="showJobModal" class="fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-50 z-10">
     <div class="bg-white p-6 rounded-lg shadow-md w-11/12 md:w-3/4">
@@ -128,14 +128,14 @@ export default {
   },
   methods: {
     toggleForm(){
+      console.log(this.showJobModal)
       this.showJobModal = !this.showJobModal
-      console.log(this.showJobModal);
     }
   },
   computed:{
     isNotUser (){
       const authStore = useAuthStore();
-      return authStore.type !== 'user';
+      return authStore.type === 'user';
     }
   }
 }

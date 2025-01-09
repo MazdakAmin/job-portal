@@ -1,5 +1,4 @@
 import axios from 'axios';
-import LocalStorageService from './LocalStorageService';
 const axiosIntance = axios.create({
     baseURL:import.meta.env.VITE_API_URL,
     headers: {
@@ -9,7 +8,7 @@ const axiosIntance = axios.create({
 
 axiosIntance.interceptors.request.use(
     (config) => {
-        const token = LocalStorageService.getItem('access-token');
+        const token = sessionStorage.getItem('access-token');
         if(token){
             config.headers['Authorization'] = `Bearer ${token}`;
         }else{

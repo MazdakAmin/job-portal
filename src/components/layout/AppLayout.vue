@@ -26,12 +26,14 @@
   <script>
   import Sidbar from '@/components/Sidbar.vue';
   import Header from '@/components/Header.vue';
-  import AlertMessage from '../AlertMessage.vue';
+  import AlertMessage from '@/components/AlertMessage.vue';
+  import ConfirmModal from '@/components/ConfirmModal.vue';
   export default{
     components:{
         Sidbar,
         Header,
-        AlertMessage
+        AlertMessage,
+        ConfirmModal
     }
   }
 </script>
