@@ -185,7 +185,7 @@ export default {
     onDelete(userId){
         const confirmStore = useConfirmationStore();
         const alertStore = useAlertStore();
-        confirmStore.openConfirmModal("Are you sure you want to delete this user" , async () =>{
+        confirmStore.openConfirmModal("You want to delete this user?" , async () =>{
             try{
                 console.log(userId);
                 

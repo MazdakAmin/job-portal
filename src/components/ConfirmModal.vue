@@ -16,12 +16,12 @@
 </template>
 
 <script>
-import { useConfirmStore } from '@/stores/useConfirmStore';
+import { useConfirmationStore } from '@/stores/confirmStore';
 
 export default {
     data() {
         return {
-            confirmStore: useConfirmStore(),
+            confirmStore: useConfirmationStore(),
         };
     },
     computed: {
