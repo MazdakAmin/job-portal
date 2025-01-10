@@ -9,7 +9,7 @@ import JobView from '@/views/JobView.vue';
 import Register from '@/views/Register.vue';
 import Login from '@/views/Login.vue';
 import UserView from '@/views/admin/UserView.vue';
-
+import ProfileEditView from '@/views/ProfileEditView.vue';
 //stores 
 import { useAuthStore } from '@/stores/authStore';
 
@@ -55,6 +55,11 @@ const routes = [
     component: UserView,
     meta: { requiresAdmin: true },
   },
+  {
+    path:'/profile',
+    name:'profile',
+    component:ProfileEditView
+  }
 ];
 
 const router = createRouter({

@@ -21,6 +21,12 @@
             v-if="isDropdownOpen"
             class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-50"
           >
+          <RouterLink
+          to="/profile"
+              class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+            >
+              Profile
+          </RouterLink>
             <button
               class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
               @click.prevent="logout"
@@ -38,11 +44,15 @@
 import axiosInstance from '@/utils/axiosInstance';
 import { useAuthStore } from "@/stores/authStore"; 
 import { useAlertStore } from '@/stores/alertStore';
+import { RouterLink } from 'vue-router';
 export default {
   data() {
     return {
       isDropdownOpen: false,
     };
+  },
+  components:{
+    RouterLink
   },
   methods: {
     toggleDropdown() {

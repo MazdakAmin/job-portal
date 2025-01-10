@@ -70,7 +70,7 @@
                                 placeholder="Enter Password"
                                 class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                                 v-model="formData.password"
-                                required
+                                :required="!isEditMod"
                                 />
                         </div>
 
@@ -80,7 +80,7 @@
                             <input type="password" id="password-confirmation" placeholder="Confirm Password"
                                 
                                 class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                                required
+                                :required="!isEditMod"
                                  />
                         </div>
 
