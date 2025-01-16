@@ -1,69 +1,57 @@
 <template>
-    <aside
-        class="absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-green-700 text-white duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0"
-        ref="target">
-        <!-- SIDEBAR HEADER -->
-        <div class="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-            <RouterLink to="/dashboard">
-                <img :src="logo" alt="Logo" />
-            </RouterLink>
+     <nav class="bg-green-700 p-6 w-64 h-full">
+        <div class="flex flex-col items-start mt-14 sm:mt-0">
+            <div class="mb-6 sm:mx-6 ">
+                <img class="w-24 h-24 rounded-full object-cover" :src="logo" alt="Vue Jobs" />
+            </div>
+            <div class="flex flex-col  sm:items-start sm:mx-6 space-y-4 w-full ">
+           
+                <RouterLink to="/dashboard"
+                    class="text-white hover:bg-green-900 rounded-md px-3 py-2 w-full text-left flex items-center gap-2"
+                    :class="isRouteActive('/dashboard')
+                        ? 'bg-green-900'
+                        : 'hover:bg-gray-900 hover:text-white'">
+                    <li class="pi pi-gauge" style="font-size: 1.5rem"></li>
+                    Dashboard
+                </RouterLink>
+                <RouterLink to="/"
+                    class="text-white hover:bg-green-900 rounded-md px-3 py-2 w-full text-left flex items-center gap-2">
+                    <li class="pi pi-gauge" style="font-size: 1.5rem"></li>
+                    Home
+                </RouterLink>
+                <RouterLink to="/users" v-if="isAdmin"
+                    class="text-white hover:bg-green-900 rounded-md px-3 py-2 w-full text-left flex items-center gap-2"
+                    :class="isRouteActive('/users')
+                        ? 'bg-green-900'
+                        : 'hover:bg-gray-900 hover:text-white'">
+                    <i class="pi pi-user" style="font-size: 1.5rem"></i>
+                    Users
+                </RouterLink>
+                <RouterLink to="/admin-jobs" v-if="isNotUser"
+                    class="text-white hover:bg-green-900 rounded-md px-3 py-2 w-full text-left flex items-center gap-2"
+                    :class="isRouteActive('/admin-jobs')
+                        ? 'bg-green-900'
+                        : 'hover:bg-gray-900 hover:text-white'">
+                    <li class="pi pi-gauge" style="font-size: 1.5rem"></li>
+                    Jobs
+                </RouterLink>
+                <RouterLink to="/applications" v-if="isNotUser"
+                    class="text-white hover:bg-green-900 rounded-md px-3 py-2 w-full text-left flex items-center gap-2"
+                    :class="isRouteActive('/applications')
+                        ? 'bg-green-900'
+                        : 'hover:bg-gray-900 hover:text-white'">
+                    <li class="pi pi-file-check" style="font-size: 1.5rem"></li>
+                    Applications
+                </RouterLink>
+            </div>
         </div>
-        <!-- SIDEBAR HEADER -->
-
-        <div class="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
-            <!-- Sidebar Menu -->
-            <nav class="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
-
-                <div>
-                    <ul class="mb-6 flex flex-col gap-1.5">
-                        <RouterLink to="/dashboard"
-                            class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4"
-                            :class="isRouteActive('/dashboard')
-                  ? 'bg-green-900'
-                  : 'hover:bg-gray-900 hover:text-white'"
-                            >
-                            <li class="pi pi-gauge" style="font-size: 1.5rem"></li>
-                            Dashboard</RouterLink>
-                        <RouterLink to="/"
-                            class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4"
-                            >
-                            <li class="pi pi-home" style="font-size: 1.5rem"></li>
-                            Home</RouterLink>
-                            <RouterLink to="/users"
-                            class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4"
-                            :class="isRouteActive('/users')
-                  ? 'bg-green-900'
-                  : 'hover:bg-gray-900 hover:text-white'"
-                            >
-                            <i class="pi pi-user" style="font-size: 1.5rem"></i>
-                            Users</RouterLink>
-                            <RouterLink to="/admin-jobs"
-                            class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4"
-                            :class="isRouteActive('/jobs')
-                  ? 'bg-green-900'
-                  : 'hover:bg-gray-900 hover:text-white'"
-                            >
-                            <li class="pi pi-briefcase" style="font-size: 1.5rem"></li>
-                            Jobs</RouterLink>
-                            <RouterLink to="/admin-jobs"
-                            class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4"
-                            :class="isRouteActive('/applications')
-                  ? 'bg-green-900'
-                  : 'hover:bg-gray-900 hover:text-white'"
-                            >
-                            <li class="pi pi-file-check" style="font-size: 1.5rem"></li>
-                            Applications</RouterLink>
-
-                    </ul>
-                </div>
-            </nav>
-        </div>
-    </aside>
+    </nav>
 </template>
 <script>
 import { RouterLink } from 'vue-router';
 import logo from '@/assets/img/logo.png';
 import {isRouteActive} from '@/utils/routeUtils.js'
+import { useAuthStore } from '@/stores/authStore';
 export default {
     components: {
         RouterLink
@@ -75,6 +63,16 @@ export default {
     },
     methods:{
         isRouteActive
+    },
+    computed:{
+        isAdmin(){
+            const authStore = useAuthStore();
+            return authStore.type === 'admin';
+        },
+        isNotUser (){
+            const authStore = useAuthStore();
+            return authStore.type !== 'user'
+        }
     }
 }
 </script>
