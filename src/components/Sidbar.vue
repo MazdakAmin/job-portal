@@ -27,9 +27,9 @@
                     <i class="pi pi-user" style="font-size: 1.5rem"></i>
                     Users
                 </RouterLink>
-                <RouterLink to="/admin-jobs" v-if="isNotUser"
+                <RouterLink to="/panel-jobs" v-if="isNotUser"
                     class="text-white hover:bg-green-900 rounded-md px-3 py-2 w-full text-left flex items-center gap-2"
-                    :class="isRouteActive('/admin-jobs')
+                    :class="isRouteActive('/panel-jobs')
                         ? 'bg-green-900'
                         : 'hover:bg-gray-900 hover:text-white'">
                     <li class="pi pi-gauge" style="font-size: 1.5rem"></li>

@@ -19,6 +19,14 @@
               <RouterLink v-if="isLogin" to="/dashboard" class="text-white hover:bg-green-900 hover:text-white rounded-md px-3 py-2">Dashboard</RouterLink>
               <RouterLink to="/login" :class="[ 'text-white', isRouteActive('/login') ? 'bg-green-900' : 'hover:bg-gray-900 hover:text-white', 'rounded-md', 'px-3', 'py-2']" v-if="!isLogin">Login</RouterLink>
               <RouterLink to="/register" :class="[ 'text-white', isRouteActive('/register') ? 'bg-green-900' : 'hover:bg-gray-900 hover:text-white', 'rounded-md', 'px-3', 'py-2']" v-if="!isLogin">Register</RouterLink>
+              <button
+                class="text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
+                @click="toggelModal"
+                v-if="isLogin && isUser"
+                :class="{'bg-green-900': modalActive}"
+              >
+                Become a
+              </button>
             </div>
           </div>
         </div>
@@ -37,6 +45,7 @@ export default {
   data() {
     return {
       logo: logo,
+      modalActive: false,
     };
   },
   components: {
@@ -46,7 +55,10 @@ export default {
     isLoggedIn() {
       this.isLogIn = LocalStorageService.isLoggedIn();
     },
-    isRouteActive
+    isRouteActive,
+    toggelModal(){
+      this.modalActive = !this.modalActive;
+    }
   },
   mounted() {
     this.isLoggedIn();
@@ -55,6 +67,10 @@ export default {
     isLogin(){
       const authStore = useAuthStore();
       return authStore.isLogin
+    },
+    isUser(){
+      const authStore = useAuthStore();
+      return authStore.type === 'user';
     }
   }
 };

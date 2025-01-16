@@ -10,6 +10,7 @@ import Register from '@/views/Register.vue';
 import Login from '@/views/Login.vue';
 import UserView from '@/views/admin/UserView.vue';
 import ProfileEditView from '@/views/ProfileEditView.vue';
+import PanelJobs from '@/views/admin/PanelJobs.vue';
 //stores 
 import { useAuthStore } from '@/stores/authStore';
 
@@ -59,7 +60,13 @@ const routes = [
     path:'/profile',
     name:'profile',
     component:ProfileEditView
-  }
+  },
+  {
+    path:'/panel-jobs',
+    name:'panel-jobs',
+    component:PanelJobs
+  },
+  
 ];
 
 const router = createRouter({
