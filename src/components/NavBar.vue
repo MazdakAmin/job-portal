@@ -10,22 +10,18 @@
           </RouterLink>
           <div class="md:ml-auto">
             <div class="flex space-x-2">
-              <RouterLink to="/" :class="[ 'text-white', isRouteActive('/') ? 'bg-green-900' : 'hover:bg-gray-900 hover:text-white', 'rounded-md', 'px-3', 'py-2']">
-                Home
-              </RouterLink>
-              <RouterLink to="/jobs" :class="[ 'text-white', isRouteActive('/jobs') ? 'bg-green-900' : 'hover:bg-gray-900 hover:text-white', 'rounded-md', 'px-3', 'py-2']">
-                Jobs
-              </RouterLink>
-              <RouterLink v-if="isLogin" to="/dashboard" class="text-white hover:bg-green-900 hover:text-white rounded-md px-3 py-2">Dashboard</RouterLink>
-              <RouterLink to="/login" :class="[ 'text-white', isRouteActive('/login') ? 'bg-green-900' : 'hover:bg-gray-900 hover:text-white', 'rounded-md', 'px-3', 'py-2']" v-if="!isLogin">Login</RouterLink>
-              <RouterLink to="/register" :class="[ 'text-white', isRouteActive('/register') ? 'bg-green-900' : 'hover:bg-gray-900 hover:text-white', 'rounded-md', 'px-3', 'py-2']" v-if="!isLogin">Register</RouterLink>
+              <NavLink to="/">Home</NavLink>
+              <NavLink to="/jobs">Jobs</NavLink>
+              <NavLink v-if="isLogin" to="/dashboard">Dashboard</NavLink>
+              <NavLink v-if="!isLogin" to="/login">Login</NavLink>
+              <NavLink v-if="!isLogin" to="/register">Register</NavLink>
               <button
                 class="text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
                 @click="toggelModal"
                 v-if="isLogin && isUser"
                 :class="{'bg-green-900': modalActive}"
               >
-                Become a
+                Become Employer
               </button>
             </div>
           </div>
@@ -33,35 +29,133 @@
       </div>
     </div>
   </nav>
+
+  <div v-if="modalActive" class="fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-50 z-10">
+    <div class="bg-white p-6 rounded-lg shadow-md w-11/12 md:w-3/4">
+      <h2 class="text-2xl font-bold text-green-800 mb-6">Register As Employer</h2>
+      <form @submit.prevent="onSubmit">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Job Title -->
+          <div class="mb-4">
+            <label for="name" class="block text-sm font-medium text-gray-700">Company Name</label>
+            <input
+              type="text"
+              id="name"
+              v-model="formData.companyName"
+              placeholder="Enter Company Name"
+              class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            />
+          </div>
+
+          <!-- Salary -->
+          <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-gray-700">Company Email</label>
+            <input
+              type="email"
+              id="email"
+              v-model="formData.companyEmail"
+              placeholder="Enter Email"
+              class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            />
+          </div>
+          <!-- Location -->
+          <div class="mb-4">
+            <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+            <input
+              type="text"
+              v-model="formData.location"
+              id="location"
+              placeholder="Enter job location"
+              class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="number" class="block text-sm font-medium text-gray-700">Number</label>
+            <input
+              type="text"
+              id="number"
+              v-model="formData.number"
+              placeholder="Enter Number"
+              class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+        <!-- dis -->
+        <div class="mb-4">
+          <label for="info" class="block text-sm font-medium text-gray-700">Company info</label>
+          <textarea
+            id="info"
+            placeholder="Enter company info"
+            rows="4"
+            v-model="formData.info"
+            class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          ></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
+        >
+          Submit
+        </button>
+      </form>
+
+      <!-- Cancel Button -->
+      <button @click.prevent="toggelModal()" class="mt-4 text-center w-full text-red-500 font-bold">
+        Cancel
+      </button>
+    </div>
+  </div>
 </template>
 
 <script>
 import logo from "@/assets/img/logo.png";
 import { RouterLink } from "vue-router";
-import LocalStorageService from "@/utils/LocalStorageService";
 import { isRouteActive } from "@/utils/routeUtils";
 import { useAuthStore } from "@/stores/authStore";
+import axiosIntance from "@/utils/axiosInstance";
+import { useAlertStore } from "@/stores/alertStore";
+import NavLink from "./NavLink.vue";
 export default {
   data() {
     return {
       logo: logo,
       modalActive: false,
+      formData:{
+        companyName:'',
+        companyEmail:'',
+        info:'',
+        location:'',
+        number:''
+      },
+      formError:{
+        companyname:''
+      }
     };
   },
   components: {
-    RouterLink
+    RouterLink,
+    NavLink
   },
   methods: {
-    isLoggedIn() {
-      this.isLogIn = LocalStorageService.isLoggedIn();
-    },
     isRouteActive,
     toggelModal(){
       this.modalActive = !this.modalActive;
+    },
+    async onSubmit()
+    {
+      const alertStore = useAlertStore();
+      try{
+        const response = await axiosIntance.post('/employer/create',this.formData);
+        console.log(response);
+      }catch(error){
+        console.log(error);
+     alertStore.setAlertMessage(error?.response?.data?.message,'error')
+        
+      }
     }
-  },
-  mounted() {
-    this.isLoggedIn();
   },
   computed:{
     isLogin(){

@@ -25,7 +25,6 @@
       </div>
     </div>
   </section>
-  {{ console.log(isNotUser) }}
   <!-- Job Creation Modal -->
   <div v-if="showJobModal" class="fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-50 z-10">
     <div class="bg-white p-6 rounded-lg shadow-md w-11/12 md:w-3/4">
