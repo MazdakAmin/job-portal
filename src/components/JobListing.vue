@@ -9,7 +9,10 @@
         {{ turenCateDis }}
       </div>
 
-      <h3 class="text-green-500 mb-2">{{ job.salary }}</h3>
+      <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-green-500 font-bold">{{ job.salary }}</h3>
+                            <p class="text-sm text-gray-500 italic">3 days ago</p>
+                        </div>
 
       <div class="border border-gray-100 mb-5"></div>
 

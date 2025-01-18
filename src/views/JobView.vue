@@ -17,17 +17,16 @@
                         <h3 class="text-green-800 text-lg font-bold mb-6">
                             Job Description
                         </h3>
-
                         <p class="mb-4">
                             We are seeking a talented Front-End Developer to join our team in
                             Boston, MA. The ideal candidate will have strong skills in HTML,
                             CSS, and JavaScript, with experience working with modern
                             JavaScript frameworks such as Vue or Angular.
                         </p>
-
-                        <h3 class="text-green-800 text-lg font-bold mb-2">Salary</h3>
-
-                        <p class="mb-4">$70k - $80K / Year</p>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-green-500 font-bold">$50</h3>
+                            <p class="text-sm text-gray-500 italic">3 days ago</p>
+                        </div>
                     </div>
                 </main>
 

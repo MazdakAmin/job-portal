@@ -74,10 +74,10 @@ const router = createRouter({
   routes,
 });
 
+const publicRoutes = ['home', 'jobs', 'job', 'login', 'register'];
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore;
   const { isLogin, type } = authStore();
-  const publicRoutes = ['home', 'jobs', 'job', 'login', 'register'];
   if (!isLogin && !publicRoutes.includes(to.name)) {
     return next({ name: 'home' });
   }
