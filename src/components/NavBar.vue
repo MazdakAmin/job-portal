@@ -113,7 +113,6 @@
 <script>
 import logo from "@/assets/img/logo.png";
 import { RouterLink } from "vue-router";
-import { isRouteActive } from "@/utils/routeUtils";
 import { useAuthStore } from "@/stores/authStore";
 import axiosIntance from "@/utils/axiosInstance";
 import { useAlertStore } from "@/stores/alertStore";
@@ -140,7 +139,6 @@ export default {
     NavLink
   },
   methods: {
-    isRouteActive,
     toggelModal(){
       this.modalActive = !this.modalActive;
     },
