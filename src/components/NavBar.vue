@@ -59,7 +59,7 @@
             />
           </div>
           <!-- Location -->
-          <div class="mb-4">
+          <!-- <div class="mb-4">
             <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
             <input
               type="text"
@@ -79,7 +79,7 @@
               placeholder="Enter Number"
               class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
             />
-          </div>
+          </div> -->
         </div>
         <!-- dis -->
         <div class="mb-4">
@@ -88,7 +88,7 @@
             id="info"
             placeholder="Enter company info"
             rows="4"
-            v-model="formData.info"
+            v-model="formData.companyDesc"
             class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
           ></textarea>
         </div>
@@ -116,7 +116,7 @@ import { RouterLink } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
 import axiosIntance from "@/utils/axiosInstance";
 import { useAlertStore } from "@/stores/alertStore";
-import NavLink from "./NavLink.vue";
+import NavLink from "@/components/NavLink.vue";
 export default {
   data() {
     return {
@@ -125,9 +125,7 @@ export default {
       formData:{
         companyName:'',
         companyEmail:'',
-        info:'',
-        location:'',
-        number:''
+        companyDesc:'',
       },
       formError:{
         companyname:''
@@ -138,6 +136,7 @@ export default {
     RouterLink,
     NavLink
   },
+  
   methods: {
     toggelModal(){
       this.modalActive = !this.modalActive;
@@ -147,7 +146,12 @@ export default {
       const alertStore = useAlertStore();
       try{
         const response = await axiosIntance.post('/employer/create',this.formData);
-        console.log(response);
+        const authStore = useAuthStore();
+        const type = 'employer'
+        authStore.type = type ;
+        sessionStorage.setItem('type' , type);
+        alertStore.setAlertMessage(response?.data?.message || "Now you can add jobs too!",'success');
+        this.toggelModal();
       }catch(error){
         console.log(error);
      alertStore.setAlertMessage(error?.response?.data?.message,'error')

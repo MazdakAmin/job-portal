@@ -29,7 +29,7 @@
   <div v-if="showJobModal" class="fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-50 z-10">
     <div class="bg-white p-6 rounded-lg shadow-md w-11/12 md:w-3/4">
       <h2 class="text-2xl font-bold text-green-800 mb-6">Create New Job</h2>
-      <form >
+      <form @submit.prevent="addJob">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Job Title -->
           <div class="mb-4">
@@ -39,6 +39,7 @@
               id="jobTitle"
               placeholder="Enter job title"
               class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              v-model="formData.jobTitle"
               required
             />
           </div>
@@ -51,6 +52,7 @@
               id="salary"
               placeholder="Enter salary"
               class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              v-model="formData.salary"
               required
             />
           </div>
@@ -61,6 +63,7 @@
             <select
               id="jobType"
               class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              v-model="formData.jobType"
               required
             >
               <option value="">Select Job Type</option>
@@ -78,6 +81,7 @@
               id="location"
               placeholder="Enter job location"
               class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              v-model="formData.location"
               required
             />
           </div>
@@ -87,7 +91,7 @@
           <label for="jobDescription" class="block text-sm font-medium text-gray-700">Job Description</label>
           <textarea
             id="jobDescription"
-            v-model="jobDescription"
+            v-model="formData.jobDesc"
             placeholder="Enter job description"
             rows="4"
             class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -115,10 +119,19 @@
 import Card from '@/components/Card.vue';
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
+import axiosIntance from '@/utils/axiosInstance';
+import { useAlertStore } from '@/stores/alertStore';
 export default {
   data() {
     return {
-      showJobModal: false
+      showJobModal: false,
+      formData :{
+        jobTitle:'',
+        jobType: '',
+        salary:'',
+        location:'',
+        jobDesc:''
+      }
     }
   },
   components: {
@@ -127,8 +140,17 @@ export default {
   },
   methods: {
     toggleForm(){
-      console.log(this.showJobModal)
       this.showJobModal = !this.showJobModal
+    },
+    addJob(){
+    const alertStore =useAlertStore();
+      axiosIntance.post('/job/create',this.formData)
+      .then((res) => {
+        alertStore.setAlertMessage(res?.data?.message || 'Job created successfully!' , 'success');
+        this.toggleForm();
+      }).catch((error) => {
+        alertStore.setAlertMessage(error?.response?.data?.message || 'Somthing went wrong','error');
+      })
     }
   },
   computed:{

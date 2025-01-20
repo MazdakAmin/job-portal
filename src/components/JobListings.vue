@@ -14,17 +14,36 @@
 <script>
 import jobData from '@/assets/jobs.json';
 import JobListing from '@/components/JobListing.vue';
+import { useAlertStore } from '@/stores/alertStore';
+import axiosIntance from '@/utils/axiosInstance';
+import AlertMessage from './AlertMessage.vue';
 export default {
   data() {
     return {
-      jobs: jobData
+      jobs: jobData,
+      data : [],
     }
   },
   props: {
     limit: Number,
   },
   components: {
-    JobListing
+    JobListing,
+    AlertMessage
+  },
+  methods:{
+   async fetchJobs(){
+    const AlertMessage = useAlertStore();
+      try{
+        const response = await axiosIntance.get('/getAllJobs');
+       this.data =  response?.data?.jobs;
+      }catch(error){
+        AlertMessage.setAlertMessage(error?.response?.data?.message || 'Somthing went wrong please try later','error');
+      }
+    }
+  },
+  mounted(){
+    this.fetchJobs();
   }
 }
 </script>

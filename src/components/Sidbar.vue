@@ -35,7 +35,7 @@
 import { RouterLink } from 'vue-router';
 import logo from '@/assets/img/logo.png';
 import { useAuthStore } from '@/stores/authStore';
-import NavLink from './NavLink.vue';
+import NavLink from '@/components/NavLink.vue';
 export default {
     components: {
         RouterLink,
