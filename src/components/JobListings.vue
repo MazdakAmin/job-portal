@@ -12,16 +12,15 @@
   </section>
 </template>
 <script>
-import jobData from '@/assets/jobs.json';
 import JobListing from '@/components/JobListing.vue';
 import { useAlertStore } from '@/stores/alertStore';
 import axiosIntance from '@/utils/axiosInstance';
 import AlertMessage from './AlertMessage.vue';
+import { eventBus } from '@/utils/eventBus';
 export default {
   data() {
     return {
-      jobs: jobData,
-      data : [],
+      jobs: [],
     }
   },
   props: {
@@ -35,15 +34,40 @@ export default {
    async fetchJobs(){
     const AlertMessage = useAlertStore();
       try{
-        const response = await axiosIntance.get('/getAllJobs');
-       this.data =  response?.data?.jobs;
+        const response = await axiosIntance.get('/job/getAllJobs');
+       this.jobs =  response?.data?.jobs.map(job => ({
+        ...job,
+        timeAgo : this.formatTimeAgo(job.createdAt)
+       }))
       }catch(error){
         AlertMessage.setAlertMessage(error?.response?.data?.message || 'Somthing went wrong please try later','error');
       }
-    }
+    },
+    formatTimeAgo(dateString) {
+      const now = new Date();
+      const createdDate = new Date(dateString);
+      const diffInSeconds = (now - createdDate) / 1000; 
+      const diffInMinutes = diffInSeconds / 60; 
+      const diffInHours = diffInMinutes / 60; 
+      const diffInDays = diffInHours / 24; 
+
+      if (diffInDays >= 1) {
+        return `${Math.floor(diffInDays)} days ago`;
+      } else if (diffInHours >= 1) {
+        return `${Math.floor(diffInHours)} hours ago`;
+      } else if (diffInMinutes >= 1) {
+        return `${Math.floor(diffInMinutes)} minutes ago`;
+      } else {
+        return `Just now`; 
+      }
+    },
   },
   mounted(){
     this.fetchJobs();
+    eventBus.on('add-job', this.fetchJobs);
+  },
+  beforeUnmount() {
+    eventBus.off('job-added', this.fetchJobs());
   }
 }
 </script>

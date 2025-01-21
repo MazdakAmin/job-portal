@@ -121,6 +121,7 @@ import { RouterLink } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
 import axiosIntance from '@/utils/axiosInstance';
 import { useAlertStore } from '@/stores/alertStore';
+import { eventBus } from '@/utils/eventBus';
 export default {
   data() {
     return {
@@ -148,10 +149,17 @@ export default {
       .then((res) => {
         alertStore.setAlertMessage(res?.data?.message || 'Job created successfully!' , 'success');
         this.toggleForm();
+        eventBus.emit('add-job');
+        this.formData.jobTitle = '';
+        this.formData.location = '';
+        this.formData.salary = '';
+        this.formData.jobDesc = '';
+        this.formData.jobType = '';
       }).catch((error) => {
         alertStore.setAlertMessage(error?.response?.data?.message || 'Somthing went wrong','error');
       })
-    }
+    },
+  
   },
   computed:{
     isNotUser (){
