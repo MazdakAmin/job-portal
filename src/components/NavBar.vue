@@ -136,7 +136,7 @@ export default {
     RouterLink,
     NavLink
   },
-  
+
   methods: {
     toggelModal(){
       this.modalActive = !this.modalActive;
@@ -155,7 +155,6 @@ export default {
       }catch(error){
         console.log(error);
      alertStore.setAlertMessage(error?.response?.data?.message,'error')
-        
       }
     }
   },

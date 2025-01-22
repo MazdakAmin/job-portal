@@ -1,5 +1,6 @@
 <template>
     <NavBar />
+    <AlertMessage />
     <section class="bg-green-50">
         <div class="container m-auto py-10 px-6">
             <div class="grid grid-cols-1 md:grid-cols-70/30 w-full gap-6">
@@ -61,8 +62,11 @@
                     <!-- Manage -->
                     <div class="bg-white p-6 rounded-lg shadow-md mt-6">
                         <h3 class="text-xl font-bold mb-6">Manage Job</h3>
-                        <button @click.prevent="toggleModal()"
-                            class="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">Apply</button>
+                        <p class="text-red-600" v-if="!isLogin">Please register for applying</p>
+                        <!-- <button @click.prevent="toggleModal()"
+                            class="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">Apply</button> -->
+                            <button @click.prevent="onApply()"
+                            class="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">Apply</button> 
                     </div>
                 </aside>
             </div>
@@ -99,7 +103,10 @@
 
 <script>
 import NavBar from '@/components/NavBar.vue';
-
+import { useAlertStore } from '@/stores/alertStore';
+import { useAuthStore } from '@/stores/authStore';
+import axiosIntance from '@/utils/axiosInstance';
+import AlertMessage from '@/components/AlertMessage.vue';
 export default {
     data() {
         return {
@@ -109,10 +116,38 @@ export default {
     methods: {
         toggleModal() {
             this.showModal = !this.showModal;
+        },
+        onApply(){
+            const authStore = useAuthStore();
+            if(!authStore.isLogin){
+                this.$router.push('/login');
+            }else{
+                const id = this.$route.params.id;
+                if(id){
+                    const alertStore = useAlertStore();
+                    axiosIntance.post('/job/apply',{
+                        jobId:id
+                    }).then((res) => {
+                        alertStore.setAlertMessage(res?.data?.message,'success');
+                        console.log(res)
+                    }).catch((error) => {
+                        alertStore.setAlertMessage(error?.response?.data?.message,'error');
+                        console.log(error);
+                    })
+                }
+            }
         }
+     
     },
     components: {
-        NavBar
+        NavBar,
+        AlertMessage
+    },
+    computed:{
+        isLogin(){
+            const authStore = useAuthStore();
+            return authStore.isLogin;
+        }
     }
 }
 </script>

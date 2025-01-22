@@ -159,7 +159,6 @@ export default {
         alertStore.setAlertMessage(error?.response?.data?.message || 'Somthing went wrong','error');
       })
     },
-  
   },
   computed:{
     isNotUser (){

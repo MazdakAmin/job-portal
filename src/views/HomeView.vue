@@ -25,6 +25,6 @@ export default {
     JobListings,
     RouterLink,
     AlertMessage
-  }
+  },
 }
 </script>

@@ -5,9 +5,9 @@
         <div class="text-gray-600 my-2">{{ job.type }}</div>
         <h3 class="text-xl font-bold">{{ job.jobTitle }}</h3>
       </div>
-      <!-- <div class="mb-5">
+      <div class="mb-5">
         {{ turenCateDis }}
-      </div> -->
+      </div>
 
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-green-500 font-bold">{{ job.salary }}</h3>
@@ -22,7 +22,7 @@
           {{ job.location }}
         </div>
 
-        <RouterLink :to="`/job/${job.id}`"
+        <RouterLink :to="`/job/${job._id}`"
           class="h-[36px] bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-center text-sm">
           Read More
         </RouterLink>
@@ -40,11 +40,14 @@ export default {
     RouterLink
   },
   computed: {
-    // turenCateDis() {
-    //   const dis = this.job.description;
-    //   return dis.substring(0, 90) + '...';
-
-    // }
+    turenCateDis() {
+      const dis = this.job.jobDesc;
+      if(dis){
+        return dis.substring(0, 90) + '...';
+      }else{
+        return 'information on site';
+      }
+    }
   }
 }
 </script>

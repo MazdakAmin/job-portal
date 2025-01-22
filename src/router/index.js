@@ -74,7 +74,10 @@ const router = createRouter({
   routes,
 });
 
-const publicRoutes = ['home', 'jobs', 'job', 'login', 'register'];
+const publicRoutes = ['home', 'jobs', 'job', 'login', 'register'];//public routes
+/*
+**Admin and emplyr route are most same
+*/
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore;
   const { isLogin, type } = authStore();
