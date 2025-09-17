@@ -25,95 +25,13 @@
       </div>
     </div>
   </section>
-  <!-- Job Creation Modal -->
-  <div v-if="showJobModal" class="fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-50 z-10">
-    <div class="bg-white p-6 rounded-lg shadow-md w-11/12 md:w-3/4">
-      <h2 class="text-2xl font-bold text-green-800 mb-6">Create New Job</h2>
-      <form @submit.prevent="addJob">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Job Title -->
-          <div class="mb-4">
-            <label for="jobTitle" class="block text-sm font-medium text-gray-700">Job Title</label>
-            <input
-              type="text"
-              id="jobTitle"
-              placeholder="Enter job title"
-              class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              v-model="formData.jobTitle"
-              required
-            />
-          </div>
 
-          <!-- Salary -->
-          <div class="mb-4">
-            <label for="salary" class="block text-sm font-medium text-gray-700">Salary</label>
-            <input
-              type="text"
-              id="salary"
-              placeholder="Enter salary"
-              class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              v-model="formData.salary"
-              required
-            />
-          </div>
-
-          <!-- Job Type -->
-          <div class="mb-4">
-            <label for="jobType" class="block text-sm font-medium text-gray-700">Job Type</label>
-            <select
-              id="jobType"
-              class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              v-model="formData.jobType"
-              required
-            >
-              <option value="">Select Job Type</option>
-              <option value="Full-Time">Full-Time</option>
-              <option value="Part-Time">Part-Time</option>
-              <option value="Contract">Contract</option>
-            </select>
-          </div>
-
-          <!-- Location -->
-          <div class="mb-4">
-            <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
-            <input
-              type="text"
-              id="location"
-              placeholder="Enter job location"
-              class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              v-model="formData.location"
-              required
-            />
-          </div>
-        </div>
-        <!-- dis -->
-        <div class="mb-4">
-          <label for="jobDescription" class="block text-sm font-medium text-gray-700">Job Description</label>
-          <textarea
-            id="jobDescription"
-            v-model="formData.jobDesc"
-            placeholder="Enter job description"
-            rows="4"
-            class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          ></textarea>
-        </div>
-
-        <!-- Submit Button -->
-        <button
-          type="submit"
-          class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
-        >
-          Create Job
-        </button>
-      </form>
-
-      <!-- Cancel Button -->
-      <button @click.prevent="toggleForm()" class="mt-4 text-center w-full text-red-500 font-bold">
-        Cancel
-      </button>
-    </div>
-  </div>
+   <JobForm
+    :show="showJobModal"
+    :formData="formData"
+    @submit="addJob"
+    @cancel="toggleForm"
+  />
 </template>
 <script>
 import Card from '@/components/Card.vue';
@@ -122,6 +40,7 @@ import { useAuthStore } from '@/stores/authStore';
 import axiosIntance from '@/utils/axiosInstance';
 import { useAlertStore } from '@/stores/alertStore';
 import { eventBus } from '@/utils/eventBus';
+import JobForm from './JobForm.vue';
 export default {
   data() {
     return {
@@ -137,28 +56,40 @@ export default {
   },
   components: {
     Card,
-    RouterLink
+    RouterLink,
+    JobForm
   },
   methods: {
-    toggleForm(){
+    toggleForm(){yy
       this.showJobModal = !this.showJobModal
     },
-    addJob(){
-    const alertStore =useAlertStore();
-      axiosIntance.post('/job/create',this.formData)
-      .then((res) => {
-        alertStore.setAlertMessage(res?.data?.message || 'Job created successfully!' , 'success');
-        this.toggleForm();
-        eventBus.emit('add-job');
-        this.formData.jobTitle = '';
-        this.formData.location = '';
-        this.formData.salary = '';
-        this.formData.jobDesc = '';
-        this.formData.jobType = '';
-      }).catch((error) => {
-        alertStore.setAlertMessage(error?.response?.data?.message || 'Somthing went wrong','error');
-      })
-    },
+   addJob(formData) {
+      const alertStore = useAlertStore();
+      axiosIntance
+        .post('/job/create', formData)
+        .then((res) => {
+          alertStore.setAlertMessage(
+            res?.data?.message || 'Job created successfully!',
+            'success'
+          );
+          this.toggleForm();
+          eventBus.emit('add-job');
+          // reset form
+          this.formData = {
+            jobTitle: '',
+            jobType: '',
+            salary: '',
+            location: '',
+            jobDesc: ''
+          };
+        })
+        .catch((error) => {
+          alertStore.setAlertMessage(
+            error?.response?.data?.message || 'Something went wrong',
+            'error'
+          );
+        });
+    }
   },
   computed:{
     isNotUser (){

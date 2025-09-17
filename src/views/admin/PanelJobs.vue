@@ -1,5 +1,17 @@
 <template>
     <AppLayout>
+
+        <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold">Jobs</h2>
+      <button 
+        @click.prevent="showJobModal = true"
+        class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        + Add Job
+      </button>
+    </div>
+
+
+    
         <div class="overflow-x-auto">
             <table class="table-auto w-full text-left mb-6">
                 <thead class="bg-gray-200">
@@ -32,12 +44,64 @@
             </table>
         </div>
     </AppLayout>
+
+      <JobForm
+      :show="showJobModal"
+      :formData="formData"
+      @submit="addJob"
+      @cancel="toggleForm"
+    />
 </template>
 <script>
 import AppLayout from '@/components/layout/AppLayout.vue';
+import JobForm from '@/components/JobForm.vue';
+import axiosIntance from '@/utils/axiosInstance';
+import { useAlertStore } from '@/stores/alertStore';
+
 export default{
-    components:{
-        AppLayout
+    data(){
+        return{
+            showJobModal : false
+            
+        }
     },
+    components:{
+        AppLayout,
+        JobForm
+    },
+    methods: {
+        toggleForm(){
+            this.showJobModal = !this.showJobModal;
+        },
+         addJob(formData) {
+            
+      const alertStore = useAlertStore();
+      axiosIntance
+        .post('/job/create', formData)
+        .then((res) => {
+          alertStore.setAlertMessage(
+            res?.data?.message || 'Job created successfully!',
+            'success'
+          );
+          this.toggleForm();
+        //   eventBus.emit('add-job'); 
+          // reset form
+          this.formData = {
+            jobTitle: '',
+            jobType: '',
+            salary: '',
+            location: '',
+            jobDesc: ''
+          };
+        })
+        .catch((error) => {
+          alertStore.setAlertMessage(
+            error?.response?.data?.message || 'Something went wrong',
+            'error'
+          );
+        });
+    }
+    },
+
 }
 </script>
