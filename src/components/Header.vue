@@ -38,7 +38,7 @@
           :style="{ top: '100%' }" 
         >
           <button
-            @click="logout"
+            @click.prevent="logout"
             class="block w-full px-4 py-2 text-left hover:bg-gray-100"
           >
             Logout
@@ -71,9 +71,17 @@ export default {
       const authStore = useAuthStore();
       const alertStore = useAlertStore();
       axiosInstance
-        .post("/logout")
+        .get("/logout")
         .then((res) => {
-          authStore.isLogIn = false;
+          console.log(res?.status  , "OOOOOOOOOOOO")
+          if(res?.status == 404){
+             alertStore.setAlertMessage({
+            message: res.data.message,
+            type: "error",
+          });
+          return;
+          }
+          authStore.isLogin = false;
           sessionStorage.removeItem("access-token");
           sessionStorage.removeItem('type')
           sessionStorage.clear();
@@ -85,7 +93,7 @@ export default {
         })
         .catch((error) => {
           alertStore.setAlertMessage({
-            message: error.response.data.message,
+            message: error?.response?.data?.message || "Somthing went wrong",
             type: "error",
           });
         });

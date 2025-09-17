@@ -1,80 +1,137 @@
 <template>
-    <AppLayout>
-
-        <div class="flex justify-between items-center mb-4">
+  <AppLayout>
+    <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-bold">Jobs</h2>
-      <button 
+      <button
         @click.prevent="showJobModal = true"
-        class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+      >
         + Add Job
       </button>
     </div>
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="table-auto w-full text-left mb-6">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="px-4 py-2">#Id</th>
+            <th class="px-4 py-2">Title</th>
+            <th class="px-4 py-2">Type</th>
+            <th class="px-4 py-2">Salary</th>
+            <th class="px-4 py-2">Status</th>
+            <th class="px-4 py-2">Approved</th>
+            <th class="px-4 py-2">Total application</th>
+            <th class="px-4 py-2 text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="hover:bg-gray-50"
+            v-for="job in paginatedJobs"
+            :key="job._id"
+          >
+            <td class="px-4 py-2">{{ job._id }}</td>
+            <td class="px-4 py-2">{{ job.jobTitle }}</td>
+            <td class="px-4 py-2">N/A</td>
+            <td class="px-4 py-2">{{ job.salary }}</td>
+            <td
+              class="px-4 py-2"
+              :class="{
+                'text-green-700 font-semibold': job.status === 'open',
+                'text-red-700 font-semibold': job.status !== 'open'
+              }"
+            >
+              {{ job.status }}
+            </td>
+            <td
+              class="px-4 py-2"
+              :class="{
+                'text-green-700 font-semibold': job.isApproved,
+                'text-red-700 font-semibold': !job.isApproved
+              }"
+            >
+              {{ job.isApproved ? 'Yes' : 'Not' }}
+            </td>
+            <td class="px-4 py-2">N/A</td>
+            <td class="px-4 py-2">
+              <button
+                class="text-green-500 hover:text-green-700 mr-4"
+                @click="$router.push(`/dashboard/job/${job._id}`)"
+              >
+                <i class="pi pi-eye text-lg"></i>
+              </button>
+              <button class="text-blue-500 hover:text-blue-700">
+                <i class="pi pi-pencil"></i>
+              </button>
+              <button class="text-red-500 hover:text-red-700 ml-4">
+                <i class="pi pi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
+    <!-- Pagination Component -->
+    <Pagination
+      :current-page="currentPage"
+      :total-pages="totalPages"
+      @update:page="currentPage = $event"
+    />
 
-    
-        <div class="overflow-x-auto">
-            <table class="table-auto w-full text-left mb-6">
-                <thead class="bg-gray-200">
-                    <tr>
-                        <th class="px-4 py-2">#Id</th>
-                        <th class="px-4 py-2">Title</th>
-                        <th class="px-4 py-2">Type</th>
-                        <th class="px-4 py-2">Salary</th>
-                        <th class="px-4 py-2">Status</th>
-                        <th class="px-4 py-2 text-center">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-2">id</td>
-                        <td class="px-4 py-2">title</td>
-                        <td class="px-4 py-2">type</td>
-                        <td class="px-4 py-2">salary</td>
-                        <td class="px-4 py-2">Status</td>
-                        <td class="px-4 py-2 text-center">
-                            <button class="text-blue-500 hover:text-blue-700">
-                                <i class="pi pi-pencil"></i>
-                            </button>
-                            <button class="text-red-500 hover:text-red-700 ml-4" >
-                                <i class="pi pi-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </AppLayout>
-
-      <JobForm
+    <!-- Modal -->
+    <JobForm
       :show="showJobModal"
       :formData="formData"
       @submit="addJob"
       @cancel="toggleForm"
     />
+  </AppLayout>
 </template>
+
 <script>
 import AppLayout from '@/components/layout/AppLayout.vue';
 import JobForm from '@/components/JobForm.vue';
+import Pagination from '@/components/Pagination.vue';
 import axiosIntance from '@/utils/axiosInstance';
 import { useAlertStore } from '@/stores/alertStore';
 
-export default{
-    data(){
-        return{
-            showJobModal : false
-            
-        }
+export default {
+  data() {
+    return {
+      showJobModal: false,
+      jobs: [],
+      currentPage: 1,
+      perPage: 5 //this for per page
+    };
+  },
+  computed: {
+    totalPages() {
+      return Math.ceil(this.jobs.length / this.perPage);
     },
-    components:{
-        AppLayout,
-        JobForm
+    paginatedJobs() {
+      const start = (this.currentPage - 1) * this.perPage;
+      return this.jobs.slice(start, start + this.perPage);
+    }
+  },
+  components: {
+    AppLayout,
+    JobForm,
+    Pagination
+  },
+  methods: {
+    getJobs() {
+      axiosIntance
+        .get('/job/getEmpJobs')
+        .then((res) => {
+          this.jobs = res?.data?.jobs;
+        })
+        .catch((e) => console.log(e, 'Error fetching jobs'));
     },
-    methods: {
-        toggleForm(){
-            this.showJobModal = !this.showJobModal;
-        },
-         addJob(formData) {
-            
+    toggleForm() {
+      this.showJobModal = !this.showJobModal;
+    },
+    addJob(formData) {
       const alertStore = useAlertStore();
       axiosIntance
         .post('/job/create', formData)
@@ -83,16 +140,8 @@ export default{
             res?.data?.message || 'Job created successfully!',
             'success'
           );
-          this.toggleForm();
-        //   eventBus.emit('add-job'); 
-          // reset form
-          this.formData = {
-            jobTitle: '',
-            jobType: '',
-            salary: '',
-            location: '',
-            jobDesc: ''
-          };
+          // this.toggleForm();
+          this.getJobs();
         })
         .catch((error) => {
           alertStore.setAlertMessage(
@@ -101,7 +150,9 @@ export default{
           );
         });
     }
-    },
-
-}
+  },
+  mounted() {
+    this.getJobs();
+  }
+};
 </script>

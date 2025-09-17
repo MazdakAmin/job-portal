@@ -94,6 +94,7 @@ export default {
   computed:{
     isNotUser (){
       const authStore = useAuthStore();
+      console.log(authStore.type);
       return authStore.type === 'user';
     }
   }

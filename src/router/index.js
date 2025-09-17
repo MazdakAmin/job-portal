@@ -13,6 +13,7 @@ import ProfileEditView from '@/views/ProfileEditView.vue';
 import PanelJobs from '@/views/admin/PanelJobs.vue';
 //stores 
 import { useAuthStore } from '@/stores/authStore';
+import JobDetails from '@/views/admin/JobDetails.vue';
 
 const routes = [
   {
@@ -66,6 +67,11 @@ const routes = [
     name:'panel-jobs',
     component:PanelJobs
   },
+  {
+    path:'/dashboard/job/:id',
+    name:'dashbaordJob',
+    component:JobDetails
+  }
   
 ];
 
