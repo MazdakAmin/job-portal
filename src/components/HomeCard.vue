@@ -16,6 +16,7 @@
           <p class="mt-2 mb-4">
             List your job to find the perfect developer for the role
           </p>
+          
           <button  @click.prevent="toggleForm()"
           :disabled="isNotUser"
             class="inline-block bg-green-500 text-white rounded-lg px-4 py-2 hover:bg-green-600">
@@ -60,7 +61,7 @@ export default {
     JobForm
   },
   methods: {
-    toggleForm(){yy
+    toggleForm(){
       this.showJobModal = !this.showJobModal
     },
    addJob(formData) {
@@ -94,7 +95,6 @@ export default {
   computed:{
     isNotUser (){
       const authStore = useAuthStore();
-      console.log(authStore.type);
       return authStore.type === 'user';
     }
   }

@@ -1,4 +1,4 @@
-<!-- JobModal.vue -->
+<!-- JobForm.vue -->
 <template>
   <div
     v-if="show"
@@ -13,7 +13,9 @@
         &times;
       </button>
 
-      <h2 class="text-2xl font-bold text-green-800 mb-6">Create New Job</h2>
+      <h2 class="text-2xl font-bold text-green-800 mb-6">
+        {{ mode === 'edit' ? 'Edit Job' : 'Create New Job' }}
+      </h2>
 
       <form @submit.prevent="handleSubmit">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -98,12 +100,27 @@
           ></textarea>
         </div>
 
+        <!-- Extra Input: Status (only if showStatus prop is true) -->
+        <div v-if="showStatus" class="mb-4">
+          <label for="status" class="block text-sm font-medium text-gray-700"
+            >Status</label
+          >
+          <select
+            id="status"
+            v-model="localFormData.status"
+            class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          >
+            <option value="open">Open</option>
+            <option value="close">Close</option>
+          </select>
+        </div>
+
         <!-- Submit Button -->
         <button
           type="submit"
           class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
         >
-          Create Job
+          {{ mode === 'edit' ? 'Update Job' : 'Create Job' }}
         </button>
       </form>
 
@@ -118,26 +135,24 @@
   </div>
 </template>
 
-
 <script>
 export default {
   name: 'JobModal',
   props: {
-    show: {
-      type: Boolean,
-      required: true
-    },
+    show: { type: Boolean, required: true },
     formData: {
       type: Object,
-      required: false,
       default: () => ({
         jobTitle: '',
         salary: '',
         jobType: '',
         location: '',
-        jobDesc: ''
+        jobDesc: '',
+        status: 'open'
       })
-    }
+    },
+    mode: { type: String, default: 'create' }, // "create" or "edit"
+    showStatus: { type: Boolean, default: false } // extra field toggle
   },
   emits: ['submit', 'cancel'],
   data() {
