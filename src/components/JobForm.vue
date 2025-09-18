@@ -105,6 +105,7 @@
           <label for="status" class="block text-sm font-medium text-gray-700"
             >Status</label
           >
+          
           <select
             id="status"
             v-model="localFormData.status"
@@ -113,7 +114,9 @@
             <option value="open">Open</option>
             <option value="close">Close</option>
           </select>
+
         </div>
+        {{ localFormData }}
 
         <!-- Submit Button -->
         <button

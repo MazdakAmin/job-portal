@@ -1,11 +1,27 @@
 <template>
   <AppLayout>
     <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-bold">Jobs</h2>
+
+
+      <div class="flex items-center gap-2">
+        <label class="flex items-center cursor-pointer">
+          <input type="checkbox" v-model="filterApproved" @change="getJobs" class="hidden" />
+          <div class="w-10 h-5 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out"
+            :class="filterApproved ? 'bg-green-500' : 'bg-gray-300'">
+            <div class="bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out"
+              :class="filterApproved ? 'translate-x-5' : ''"></div>
+          </div>
+        </label>
+        <span class="ml-2 text-sm font-medium">
+          {{ filterApproved ? 'Approved Jobs' : 'All Jobs' }}
+        </span>
+      </div>
+
       <button @click.prevent="addJobClick" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
         + Add Job
       </button>
     </div>
+
     <!-- Table -->
     <div class="overflow-x-auto">
       <table class="table-auto w-full text-left mb-6">
@@ -21,6 +37,7 @@
             <th class="px-4 py-2 text-center">Action</th>
           </tr>
         </thead>
+        {{ console.log(jobs) }}
         <tbody>
           <tr class="hover:bg-gray-50" v-for="job in paginatedJobs" :key="job._id">
             <td class="px-4 py-2">{{ job._id }}</td>
@@ -33,12 +50,15 @@
             }">
               {{ job.status }}
             </td>
-            <td class="px-4 py-2" :class="{
-              'text-green-700 font-semibold': job.isApproved,
-              'text-red-700 font-semibold': !job.isApproved
-            }">
-              {{ job.isApproved ? 'Yes' : 'Not' }}
+            <td class="px-4 py-2">
+              <span v-if="job.isApproved" class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-sm">
+                Approved
+              </span>
+              <span v-else class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-sm">
+                Pending
+              </span>
             </td>
+
             <td class="px-4 py-2">N/A</td>
             <td class="px-4 py-2">
               <button class="text-green-500 hover:text-green-700 mr-4"
@@ -61,8 +81,8 @@
     <Pagination :current-page="currentPage" :total-pages="totalPages" @update:page="currentPage = $event" />
 
     <!-- Modal -->
-    <JobForm :show="showJobModal" :formData="formData" :mode="formMode" :showStatus="showStatus" @submit="handleFormSubmit"
-      @cancel="toggleForm" />
+    <JobForm :show="showJobModal" :formData="formData" :mode="formMode" :showStatus="showStatus"
+      @submit="handleFormSubmit" @cancel="toggleForm" />
   </AppLayout>
 </template>
 
@@ -78,12 +98,13 @@ export default {
   data() {
     return {
       showJobModal: false,
-      formMode:'create',
-      showStatus : false,
+      formMode: 'create',
+      showStatus: false,
       jobs: [],
       currentPage: 1,
-      perPage: 5 //this for per page
-    };
+      perPage: 5,//this for per page
+      filterApproved: null
+    }
   },
   computed: {
     totalPages() {
@@ -101,10 +122,15 @@ export default {
   },
   methods: {
     getJobs() {
+      let params = {};
+      if (this.filterApproved === true) {
+        params.isApproved = true;
+      }
+
       axiosIntance
-        .get('/job/getEmpJobs')
+        .get('/job/getEmpJobs', { params })
         .then((res) => {
-          this.jobs = res?.data?.jobs;
+          this.jobs = res?.data?.jobs || [];
         })
         .catch((e) => console.log(e, 'Error fetching jobs'));
     },
@@ -112,16 +138,25 @@ export default {
       this.showJobModal = !this.showJobModal;
     },
     addJobClick() {
-       this.showStatus = false;
+      this.showStatus = false;
       this.formMode = 'create';
-     
-      this.formData = {};
+
+      this.formData = {
+        jobTitle: '',
+        salary: '',
+        jobType: '',
+        location: '',
+        jobDesc: '',
+        status: 'open'
+      }
       this.toggleForm();
     },
     editJob(job) {
+      console.log("Job On Edit" , job)
       this.showStatus = true
       this.formMode = 'edit';
       this.formData = { ...job };
+      console.log("FormatData" , this.formData)
       this.toggleForm();
     },
     handleFormSubmit(formData) {
@@ -154,7 +189,7 @@ export default {
           alertStore.setAlertMessage("User deleted successfully!", 'success');
           this.fetchUsers();
         } catch (error) {
-          alertStore.setAlertMessage(error?.response?.data?.message || "Somthing went wrong",'error');
+          alertStore.setAlertMessage(error?.response?.data?.message || "Somthing went wrong", 'error');
         }
       })
     }
