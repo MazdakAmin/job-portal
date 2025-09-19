@@ -37,12 +37,12 @@
             <th class="px-4 py-2 text-center">Action</th>
           </tr>
         </thead>
-        {{ console.log(jobs) }}
+        
         <tbody>
           <tr class="hover:bg-gray-50" v-for="job in paginatedJobs" :key="job._id">
             <td class="px-4 py-2">{{ job._id }}</td>
             <td class="px-4 py-2">{{ job.jobTitle }}</td>
-            <td class="px-4 py-2">N/A</td>
+            <td class="px-4 py-2">{{ job.jobType }}</td>
             <td class="px-4 py-2">{{ job.salary }}</td>
             <td class="px-4 py-2" :class="{
               'text-green-700 font-semibold': job.status === 'open',
@@ -62,7 +62,7 @@
             <td class="px-4 py-2">N/A</td>
             <td class="px-4 py-2">
               <button class="text-green-500 hover:text-green-700 mr-4"
-                @click="$router.push(`/dashboard/job/${job._id}`)">
+                @click.prevent="goToJob(job)">
                 <i class="pi pi-eye text-lg"></i>
               </button>
               <button class="text-blue-500 hover:text-blue-700" @click="editJob(job)">
@@ -93,6 +93,7 @@ import Pagination from '@/components/Pagination.vue';
 import axiosIntance from '@/utils/axiosInstance';
 import { useAlertStore } from '@/stores/alertStore';
 import { useConfirmStore } from '@/stores/confirmStore';
+import { useJobStore } from '@/stores/JobStore';
 
 export default {
   data() {
@@ -171,7 +172,7 @@ export default {
           })
           .catch(err => alertStore.setAlertMessage(err?.response?.data?.message || 'Error', 'error'));
       } else {
-        axiosIntance.put(`/job/update/${formData._id}`, formData)
+        axiosIntance.put(`/job/${formData._id}`, formData)
           .then(res => {
             alertStore.setAlertMessage(res?.data?.message || 'Job updated!', 'success');
             this.getJobs();
@@ -183,15 +184,23 @@ export default {
     onDelete(id) {
       const confirmStore = useConfirmStore();
       const alertStore = useAlertStore();
-      confirmStore.openConfirmModal("You want to delete this job?", async () => {
-        try {
-          // const response = await axiosIntance.delete(`user/${userId}`);
-          alertStore.setAlertMessage("User deleted successfully!", 'success');
-          this.fetchUsers();
-        } catch (error) {
-          alertStore.setAlertMessage(error?.response?.data?.message || "Somthing went wrong", 'error');
-        }
+      confirmStore.openConfirmModal("You want to delete this job?",() => {
+        axiosIntance.delete(`/job/${id}`)
+        .then((res) => {
+          alertStore.setAlertMessage(res?.data?.message || "Job deleted successfully!");
+          this.getJobs();
+        })
+        .catch((error) => {
+          console.log(error);
+        })
       })
+    },
+
+    goToJob(job){
+      const jobStore = useJobStore();
+      jobStore.setJob(job)
+      this.$router.push(`/dashboard/job/${job._id}`);
+
     }
 
   },
