@@ -1,5 +1,4 @@
 <template>
-  <NavBar />
   <AlertMessage />
   <Hero />
   <HomeCard />
@@ -11,7 +10,6 @@
   </section>
 </template>
 <script>
-import NavBar from '@/components/NavBar.vue';
 import Hero from '@/components/Hero.vue';
 import HomeCard from '@/components/HomeCard.vue';
 import JobListings from '@/components/JobListings.vue';
@@ -19,7 +17,6 @@ import { RouterLink } from 'vue-router';
 import AlertMessage from '@/components/AlertMessage.vue';
 export default {
   components: {
-    NavBar,
     Hero,
     HomeCard,
     JobListings,

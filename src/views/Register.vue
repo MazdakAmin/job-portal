@@ -1,56 +1,81 @@
 <template>
-  <NavBar />
   <AlertMessage />
-  <div class="flex justify-center items-center min-h-screen bg-gray-100">
-    <div class="bg-white p-6 rounded-lg shadow-md w-11/12 sm:w-96">
-      <h2 class="text-2xl font-bold text-green-800 mb-6">Create Your Account</h2>
-      
-      <!-- Register Form -->
-      <form @submit.prevent="onSubmit">
-        <!-- Name Field -->
-        <div class="mb-4">
-          <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
-          <input type="text" v-model="formData.firstname" id="name" name="name" placeholder="Enter your full name"
-            class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required />
-          <p class="text-red-600" v-if="errorMessage.firstname">{{ errorMessage.firstname }}</p>
-        </div>
 
-        <!-- Email Field -->
-        <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-          <input type="email" v-model="formData.email" id="email" name="email" placeholder="Enter your email"
-            class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required />
-          <p class="text-red-600" v-if="errorMessage.email">{{ errorMessage.email }}</p>
-        </div>
+  <v-container class="d-flex justify-center align-start" style="margin-top: 80px;">
+    <v-row justify="center">
+      <v-col cols="12" md="8" lg="6">
+        <v-card class="pa-6" elevation="6" rounded="lg">
+          <v-card-title class="text-h5 font-weight-bold text-success mb-4">
+            Create Your Account
+          </v-card-title>
 
-        <!-- Password Field -->
-        <div class="mb-4">
-          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-          <input type="password" v-model="formData.password" id="password" name="password" placeholder="Enter your password"
-            class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required />
-          <p class="text-red-600" v-if="errorMessage.password">{{ errorMessage.password }}</p>
-        </div>
+          <!-- Register Form -->
+          <v-form @submit.prevent="onSubmit" ref="formRef">
+            <!-- Name -->
+            <v-text-field
+              v-model="formData.firstname"
+              label="Full Name"
+              variant="outlined"
+              :error-messages="errorMessage.firstname"
+              required
+            />
 
-        <!-- Submit Button -->
-        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline">
-          Register
-        </button>
-      </form>
+            <!-- Email -->
+            <v-text-field
+              v-model="formData.email"
+              label="Email"
+              type="email"
+              variant="outlined"
+              :error-messages="errorMessage.email"
+              required
+            />
 
-      <!-- Login Link -->
-      <div class="mt-4 text-center">
-        <p class="text-sm text-gray-600">Already have an account? <RouterLink to="/login" class="text-green-500 font-bold">Login here</RouterLink></p>
-      </div>
-    </div>
-  </div>
+            <!-- Password -->
+            <v-text-field
+              v-model="formData.password"
+              label="Password"
+              type="password"
+              variant="outlined"
+              :error-messages="errorMessage.password"
+              required
+            />
+
+            <!-- Submit -->
+            <v-btn
+              type="submit"
+              color="success"
+              block
+              class="mt-4"
+            >
+              Register
+            </v-btn>
+          </v-form>
+
+          <!-- Login Link -->
+          <div class="mt-4 text-center">
+            <p class="text-body-2">
+              Already have an account?
+              <RouterLink to="/login" class="text-success font-weight-bold">
+                Login here
+              </RouterLink>
+            </p>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
+
 <script>
-import { useAlertStore } from '@/stores/alertStore';
-import axiosInstance from '@/utils/axiosInstance';
-import NavBar from '@/components/NavBar.vue';
-import AlertMessage from '@/components/AlertMessage.vue';
+import { useAlertStore } from '@/stores/alertStore'
+import axiosInstance from '@/utils/axiosInstance'
+import AlertMessage from '@/components/AlertMessage.vue'
+
 export default {
+  components: {
+    AlertMessage,
+  },
   data() {
     return {
       formData: {
@@ -62,53 +87,51 @@ export default {
         firstname: '',
         email: '',
         password: '',
-      }
-    };
-  },
-  components:{
-    NavBar,
-    AlertMessage
+      },
+    }
   },
   methods: {
     onSubmit() {
-      this.errorMessage.firstname = '';
-      this.errorMessage.email = '';
-      this.errorMessage.password = '';
-      let isValid = true;
+      this.errorMessage = { firstname: '', email: '', password: '' }
+      let isValid = true
 
       if (!this.formData.firstname) {
-        this.errorMessage.firstname = 'Name is required.';
-        isValid = false;
+        this.errorMessage.firstname = 'Name is required.'
+        isValid = false
       }
       if (!this.formData.email) {
-        this.errorMessage.email = 'Email is required.';
-        isValid = false;
+        this.errorMessage.email = 'Email is required.'
+        isValid = false
       } else if (!this.isValidEmail(this.formData.email)) {
-        this.errorMessage.email = 'Please enter a valid email address.';
-        isValid = false;
+        this.errorMessage.email = 'Please enter a valid email address.'
+        isValid = false
       }
       if (!this.formData.password) {
-        this.errorMessage.password = 'Password is required.';
-        isValid = false;
+        this.errorMessage.password = 'Password is required.'
+        isValid = false
       }
 
-      if (!isValid) return;
+      if (!isValid) return
 
-      const alertStore = useAlertStore();
-      axiosInstance.post('/user/register', this.formData)
-        .then((response) => {
-          alertStore.setAlertMessage("Register successfully, now you can login", 'success');
-          this.$router.push('/login');
+      const alertStore = useAlertStore()
+      axiosInstance
+        .post('/user/register', this.formData)
+        .then(() => {
+          alertStore.setAlertMessage(
+            'Register successfully, now you can login',
+            'success'
+          )
+          this.$router.push('/login')
         })
         .catch((error) => {
-          console.log(error)
-          alertStore.setAlertMessage(error.response.data.message, 'error');
-        });
+          alertStore.setAlertMessage(error.response.data.message, 'error')
+        })
     },
     isValidEmail(email) {
-      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-      return emailRegex.test(email);
+      const emailRegex =
+        /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
+      return emailRegex.test(email)
     },
-  }
-};
+  },
+}
 </script>

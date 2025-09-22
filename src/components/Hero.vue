@@ -1,30 +1,29 @@
 <template>
-    <section class="bg-green-700 py-20 mb-4">
-      <div
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center"
-      >
-        <div class="text-center">
-          <h1 class="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl">
-            {{ title }}
-          </h1>
-          <p class="my-4 text-xl text-white">
-            {{ subTitle }}
-          </p>
-        </div>
-      </div>
-    </section>
-  </template>
-  <script>
-  export default{
-    props:{
-        title:{
-            type:String,
-            default:"Become a Vue Dev"
-        },
-        subTitle:{
-            type:String,
-            default:"Find the Vue job that fits your skills and needs"
-        }
+  <v-container fluid class="bg-green-darken-2 py-16 mb-6">
+    <v-row justify="center">
+      <v-col cols="12" md="8" class="text-center">
+        <h1 class="text-h3 text-md-h2 font-weight-bold text-white">
+          {{ title }}
+        </h1>
+        <p class="text-subtitle-1 text-white mt-4">
+          {{ subTitle }}
+        </p>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script>
+export default {
+  props: {
+    title: {
+      type: String,
+      default: "Become a Vue Dev"
+    },
+    subTitle: {
+      type: String,
+      default: "Find the Vue job that fits your skills and needs"
     }
   }
+}
 </script>

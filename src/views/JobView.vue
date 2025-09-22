@@ -1,154 +1,162 @@
 <template>
-    <NavBar />
-    <AlertMessage />
-    <section class="bg-green-50">
-        <div class="container m-auto py-10 px-6">
-            <div class="grid grid-cols-1 md:grid-cols-70/30 w-full gap-6">
-                <main>
-                    <div class="bg-white p-6 rounded-lg shadow-md text-center md:text-left">
-                        <div class="text-gray-500 mb-4">Full-Time</div>
-                        <h1 class="text-3xl font-bold mb-4">Senior Vue Developer</h1>
-                        <div class="text-gray-500 mb-4 flex align-middle justify-center md:justify-start">
-                            <i class="fa-solid fa-location-dot text-lg text-orange-700 mr-2"></i>
-                            <p class="text-orange-700">Boston, MA</p>
-                        </div>
-                    </div>
+  <AlertMessage />
 
-                    <div class="bg-white p-6 rounded-lg shadow-md mt-6">
-                        <h3 class="text-green-800 text-lg font-bold mb-6">
-                            Job Description
-                        </h3>
-                        <p class="mb-4">
-                            We are seeking a talented Front-End Developer to join our team in
-                            Boston, MA. The ideal candidate will have strong skills in HTML,
-                            CSS, and JavaScript, with experience working with modern
-                            JavaScript frameworks such as Vue or Angular.
-                        </p>
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-green-500 font-bold">$50</h3>
-                            <p class="text-sm text-gray-500 italic">3 days ago</p>
-                        </div>
-                    </div>
-                </main>
+  <v-container class="py-8">
+    <v-row>
+      <!-- Job Main Content -->
+      <v-col cols="12" md="8">
+        <v-skeleton-loader
+          v-if="loading"
+          type="article"
+          class="mb-4"
+        />
 
-                <!-- Sidebar -->
-                <aside>
-                    <!-- Company Info -->
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-xl font-bold mb-6">Company Info</h3>
+        <v-card v-else class="pa-6 rounded-lg elevation-2">
+          <div class="text-grey mb-2">Full-Time</div>
+          <h1 class="text-h4 font-weight-bold mb-4">Senior Vue Developer</h1>
 
-                        <h2 class="text-2xl">NewTek Solutions</h2>
+          <div class="d-flex align-center mb-4">
+            <v-icon color="orange" class="mr-2">mdi-map-marker</v-icon>
+            <span class="text-orange">Boston, MA</span>
+          </div>
 
-                        <p class="my-2">
-                            NewTek Solutions is a leading technology company specializing in
-                            web development and digital solutions. We pride ourselves on
-                            delivering high-quality products and services to our clients while
-                            fostering a collaborative and innovative work environment.
-                        </p>
+          <v-divider class="my-4"></v-divider>
 
-                        <hr class="my-4" />
+          <h3 class="text-green-darken-2 text-h6 font-weight-bold mb-3">
+            Job Description
+          </h3>
+          <p class="mb-4">
+            We are seeking a talented Front-End Developer to join our team in Boston, MA. 
+            The ideal candidate will have strong skills in HTML, CSS, and JavaScript, with 
+            experience working with modern JavaScript frameworks such as Vue or Angular.
+          </p>
 
-                        <h3 class="text-xl">Contact Email:</h3>
+          <div class="d-flex justify-space-between align-center">
+            <h3 class="text-green font-weight-bold">$50</h3>
+            <small class="text-grey italic">3 days ago</small>
+          </div>
+        </v-card>
+      </v-col>
 
-                        <p class="my-2 bg-green-100 p-2 font-bold">
-                            contact@newteksolutions.com
-                        </p>
+      <!-- Sidebar -->
+      <v-col cols="12" md="4">
+        <!-- Company Info -->
+        <v-card class="pa-6 rounded-lg elevation-2 mb-6">
+          <h3 class="text-h6 font-weight-bold mb-4">Company Info</h3>
+          <h2 class="text-h5">NewTek Solutions</h2>
 
-                        <h3 class="text-xl">Contact Phone:</h3>
+          <p class="my-2">
+            NewTek Solutions is a leading technology company specializing in
+            web development and digital solutions. We pride ourselves on
+            delivering high-quality products and services to our clients while
+            fostering a collaborative and innovative work environment.
+          </p>
 
-                        <p class="my-2 bg-green-100 p-2 font-bold">555-555-5555</p>
-                    </div>
+          <v-divider class="my-4"></v-divider>
 
-                    <!-- Manage -->
-                    <div class="bg-white p-6 rounded-lg shadow-md mt-6">
-                        <h3 class="text-xl font-bold mb-6">Manage Job</h3>
-                        <p class="text-red-600" v-if="!isLogin">Please register for applying</p>
-                        <!-- <button @click.prevent="toggleModal()"
-                            class="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">Apply</button> -->
-                            <button @click.prevent="showModal = !showModal"
-                            class="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">Apply</button> 
-                    </div>
-                </aside>
-            </div>
-        </div>
+          <h3 class="text-subtitle-1">Contact Email:</h3>
+          <p class="my-2 bg-green-lighten-4 pa-2 font-weight-bold rounded">
+            contact@newteksolutions.com
+          </p>
 
-<!-- modal -->
-        <div v-if="showModal" class="fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-50 z-10">
-            <div class="bg-white p-6 rounded-lg shadow-md w-11/12 md:w-1/3">
-                <h2 class="text-2xl font-bold text-green-800 mb-6">Apply for Senior Vue Developer</h2>
-                <form @submit.prevent="onApply">
+          <h3 class="text-subtitle-1">Contact Phone:</h3>
+          <p class="my-2 bg-green-lighten-4 pa-2 font-weight-bold rounded">
+            555-555-5555
+          </p>
+        </v-card>
 
-                    <div class="mb-4">
-                        <label for="resume" class="block text-sm font-medium text-gray-700">Resume (PDF)</label>
-                        <input type="file" id="resume" name="resume" accept="application/pdf"
-                            class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                    </div>
+        <!-- Manage Job -->
+        <v-card class="pa-6 rounded-lg elevation-2">
+          <h3 class="text-h6 font-weight-bold mb-4">Manage Job</h3>
 
-                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline">
-                        Submit Application
-                    </button>
-                </form>
-                <button @click.prevent="toggleModal()" class="mt-4 text-center w-full text-red-500 font-bold">
-                    Cancel
-                </button>
-            </div>
-        </div>
-    </section>
+          <p v-if="!isLogin" class="text-red mb-4">
+            Please register to apply
+          </p>
+
+          <v-btn
+            v-else
+            color="green"
+            block
+            @click="showModal = true"
+          >
+            Apply
+          </v-btn>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+
+  <!-- Apply Modal -->
+  <v-dialog v-model="showModal" max-width="500px">
+    <v-card class="pa-6">
+      <h2 class="text-h6 font-weight-bold text-green-darken-2 mb-4">
+        Apply for Senior Vue Developer
+      </h2>
+
+      <v-form @submit.prevent="onApply">
+        <v-file-input
+          v-model="resume"
+          accept=".pdf"
+          label="Upload Resume (PDF)"
+          prepend-icon="mdi-file-pdf-box"
+          outlined
+          dense
+          class="mb-4"
+        />
+
+        <v-btn type="submit" color="green" block>
+          Submit Application
+        </v-btn>
+      </v-form>
+
+      <v-btn
+        text
+        block
+        color="red"
+        class="mt-2"
+        @click="showModal = false"
+      >
+        Cancel
+      </v-btn>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
-import NavBar from '@/components/NavBar.vue';
-import { useAlertStore } from '@/stores/alertStore';
-import { useAuthStore } from '@/stores/authStore';
-import axiosIntance from '@/utils/axiosInstance';
 import AlertMessage from '@/components/AlertMessage.vue';
+import { useAuthStore } from '@/stores/authStore';
+
 export default {
-    data() {
-        return {
-            showModal: false
-        }
-    },
-    methods: {
-        toggleModal() {
-            this.showModal = !this.showModal;
-        },
-
-
-        onApply(){
-            const authStore = useAuthStore();
-            if(!authStore.isLogin){
-                this.$router.push('/login');
-            }else{
-                const id = this.$route.params.id;
-                if(id){
-                    const alertStore = useAlertStore();
-                    axiosIntance.post('/job/apply',{
-                        jobId:id
-                    }).then((res) => {
-                        alertStore.setAlertMessage(res?.data?.message,'success');
-                        console.log(res)
-                    }).catch((error) => {
-                        alertStore.setAlertMessage(error?.response?.data?.message,'error');
-                        console.log(error);
-                    })
-                }
-            }
-        }
-     
-    },
-    components: {
-        NavBar,
-        AlertMessage
-    },
-    computed:{
-        isLogin(){
-            const authStore = useAuthStore();
-            return authStore.isLogin;
-        }
+  data() {
+    return {
+      showModal: false,
+      loading: true,
+      resume: null
+    };
+  },
+  components: {
+    AlertMessage
+  },
+  computed: {
+    isLogin() {
+      const authStore = useAuthStore();
+      return authStore.isLogin;
     }
-}
+  },
+  methods: {
+    onApply() {
+      if (!this.isLogin) {
+        this.$router.push('/login');
+        return;
+      }
+      console.log("Resume submitted:", this.resume);
+      this.showModal = false;
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.loading = false;
+    }, 1000); // simulate API delay
+  }
+};
 </script>
-
-<style scoped>
-
-</style>
