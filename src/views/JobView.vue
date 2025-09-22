@@ -65,7 +65,7 @@
                         <p class="text-red-600" v-if="!isLogin">Please register for applying</p>
                         <!-- <button @click.prevent="toggleModal()"
                             class="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">Apply</button> -->
-                            <button @click.prevent="onApply()"
+                            <button @click.prevent="showModal = !showModal"
                             class="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">Apply</button> 
                     </div>
                 </aside>
@@ -76,12 +76,7 @@
         <div v-if="showModal" class="fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-50 z-10">
             <div class="bg-white p-6 rounded-lg shadow-md w-11/12 md:w-1/3">
                 <h2 class="text-2xl font-bold text-green-800 mb-6">Apply for Senior Vue Developer</h2>
-                <form>
-                    <div class="mb-4">
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="email" name="email" placeholder="Enter your email"
-                            class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                    </div>
+                <form @submit.prevent="onApply">
 
                     <div class="mb-4">
                         <label for="resume" class="block text-sm font-medium text-gray-700">Resume (PDF)</label>
@@ -117,6 +112,8 @@ export default {
         toggleModal() {
             this.showModal = !this.showModal;
         },
+
+
         onApply(){
             const authStore = useAuthStore();
             if(!authStore.isLogin){
