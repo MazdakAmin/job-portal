@@ -1,38 +1,87 @@
-<!-- Sidebar.vue -->
 <template>
   <v-navigation-drawer
-    :model-value="isOpen"
-    @update:model-value="$emit('update:isOpen', $event)"
-    permanent
+    app
+    v-model="drawer"
+    color="green-darken-3"
+    dark
   >
-    <v-list>
+    <!-- Logo -->
+    <div class="text-center py-6">
+      <v-avatar size="96">
+        <v-img :src="logo" alt="Vue Jobs" />
+      </v-avatar>
+    </div>
+
+    <!-- Navigation Links -->
+    <v-list nav density="compact">
       <v-list-item
-        v-for="(item, i) in menuItems"
-        :key="i"
-        :title="item.title"
-        :to="item.to"
+        prepend-icon="mdi-view-dashboard"
+        title="Dashboard"
+        to="/dashboard"
+        link
+      />
+      <v-list-item
+        prepend-icon="mdi-home"
+        title="Home"
+        to="/"
+        link
+      />
+      <v-list-item
+        v-if="isAdmin"
+        prepend-icon="mdi-account"
+        title="Users"
+        to="/users"
+        link
+      />
+      <v-list-item
+        v-if="isNotUser"
+        prepend-icon="mdi-briefcase"
+        title="Jobs"
+        to="/panel-jobs"
+        link
+      />
+      <v-list-item
+        v-if="isNotUser"
+        prepend-icon="mdi-file-document-check"
+        title="Applications"
+        to="/applications"
+        link
       />
     </v-list>
   </v-navigation-drawer>
 </template>
 
 <script>
+import logo from "@/assets/img/logo.png"
+import { useAuthStore } from "@/stores/authStore"
+
 export default {
-  name: "Sidebar",
   props: {
-    isOpen: {
-      type: Boolean,
-      required: true
-    }
+    modelValue: Boolean,
+  },
+  emits: ["update:modelValue"],
+  computed: {
+    drawer: {
+      get() {
+        return this.modelValue
+      },
+      set(value) {
+        this.$emit("update:modelValue", value)
+      },
+    },
+    isAdmin() {
+      const authStore = useAuthStore()
+      return authStore.type === "admin"
+    },
+    isNotUser() {
+      const authStore = useAuthStore()
+      return authStore.type !== "user"
+    },
   },
   data() {
     return {
-      menuItems: [
-        { title: "Dashboard", to: "/" },
-        { title: "Jobs", to: "/jobs" },
-        { title: "Settings", to: "/settings" }
-      ]
-    };
-  }
-};
+      logo,
+    }
+  },
+}
 </script>

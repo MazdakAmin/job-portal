@@ -3,16 +3,8 @@
     <v-container fluid class="py-6">
       <!-- Header -->
       <div class="d-flex justify-space-between align-center mb-4">
-        <div class="d-flex align-center">
-          <v-switch
-            v-model="filterApproved"
-            :label="filterApproved ? 'Approved Jobs' : 'All Jobs'"
-            color="green"
-            inset
-            hide-details
-            @change="getJobs"
-          />
-        </div>
+        <v-switch v-model="filterApproved" :label="filterApproved ? 'Approved Jobs' : 'All Jobs'" color="green" inset
+          hide-details @change="getJobs" />
 
         <v-btn color="green" @click="addJobClick">
           <v-icon start>mdi-plus</v-icon>
@@ -22,34 +14,17 @@
 
       <!-- Table -->
       <v-card class="elevation-2 rounded-lg">
-        <v-data-table
-          :headers="headers"
-          :items="jobs"
-          :items-per-page="perPage"
-          :page.sync="currentPage"
-          :loading="loading"
-          loading-text="Loading jobs..."
-          class="elevation-1"
-          item-value="_id"
-        >
+        <v-data-table :headers="headers" :items="paginatedJobs" :loading="loading" loading-text="Loading jobs..."
+          class="elevation-1" item-value="_id" hide-default-footer>
           <!-- Custom cells -->
           <template v-slot:item.status="{ item }">
-            <v-chip
-              :color="item.status === 'open' ? 'green' : 'red'"
-              text-color="white"
-              size="small"
-            >
+            <v-chip :color="item.status === 'open' ? 'green' : 'red'" text-color="white" size="small">
               {{ item.status }}
             </v-chip>
           </template>
 
           <template v-slot:item.isApproved="{ item }">
-            <v-chip
-              :color="item.isApproved ? 'green' : 'yellow'
-              "
-              text-color="black"
-              size="small"
-            >
+            <v-chip :color="item.isApproved ? 'green' : 'yellow'" text-color="black" size="small">
               {{ item.isApproved ? 'Approved' : 'Pending' }}
             </v-chip>
           </template>
@@ -68,15 +43,12 @@
         </v-data-table>
       </v-card>
 
+      <!-- Pagination -->
+      <Pagination :currentPage="currentPage" :totalPages="totalPages" @update:page="currentPage = $event" />
+
       <!-- Modal -->
-      <JobForm
-        :show="showJobModal"
-        :formData="formData"
-        :mode="formMode"
-        :showStatus="showStatus"
-        @submit="handleFormSubmit"
-        @cancel="toggleForm"
-      />
+      <JobForm :show="showJobModal" :formData="formData" :mode="formMode" :showStatus="showStatus"
+        @submit="handleFormSubmit" @cancel="toggleForm" />
     </v-container>
   </AppLayout>
 </template>
@@ -84,6 +56,7 @@
 <script>
 import AppLayout from '@/components/layout/AppLayout.vue';
 import JobForm from '@/components/JobForm.vue';
+import Pagination from '@/components/Pagination.vue';
 import axiosIntance from '@/utils/axiosInstance';
 import { useAlertStore } from '@/stores/alertStore';
 import { useConfirmStore } from '@/stores/confirmStore';
@@ -99,23 +72,35 @@ export default {
       formData: {},
       filterApproved: false,
       currentPage: 1,
-      perPage: 5,
+      perPage: 1, // still used internally for slicing
       loading: false,
       headers: [
-        { text: '#Id', value: '_id' },
-        { text: 'Title', value: 'jobTitle' },
-        { text: 'Type', value: 'jobType' },
-        { text: 'Salary', value: 'salary' },
-        { text: 'Status', value: 'status' },
-        { text: 'Approved', value: 'isApproved' },
-        { text: 'Applications', value: 'applications', sortable: false },
-        { text: 'Actions', value: 'actions', sortable: false }
+        { title: '#Id', key: '_id' },
+        { title: 'Title', key: 'jobTitle' },
+        { title: 'Type', key: 'jobType' },
+        { title: 'Salary', key: 'salary' },
+        { title: 'Status', key: 'status' },
+        { title: 'Approved', key: 'isApproved' },
+        { title: 'Applications', key: 'applications', sortable: false },
+        { title: 'Actions', key: 'actions', sortable: false }
       ]
+
     };
   },
   components: {
     AppLayout,
-    JobForm
+    JobForm,
+    Pagination
+  },
+  computed: {
+    totalPages() {
+      return Math.ceil(this.jobs.length / this.perPage);
+    },
+    paginatedJobs() {
+      const start = (this.currentPage - 1) * this.perPage;
+      const end = start + this.perPage;
+      return this.jobs.slice(start, end);
+    }
   },
   methods: {
     getJobs() {
@@ -132,6 +117,7 @@ export default {
             ...job,
             applications: job.applicationsCount || 'N/A'
           }));
+          this.currentPage = 1; // reset when switching filter
         })
         .catch((e) => console.log(e, 'Error fetching jobs'))
         .finally(() => {

@@ -1,16 +1,14 @@
 <template>
   <v-app>
     <!-- ===== Sidebar ===== -->
-    <Sidbar v-model:isOpen="isSidebarOpen" />
+    <Sidbar v-model="drawer" />
 
     <!-- ===== Header ===== -->
-    <v-app-bar app color="white" flat>
-      <Header @toggle-sidebar="toggleSidebar" />
-    </v-app-bar>
+    <Header @toggle-sidebar="toggleSidebar" />
 
     <!-- ===== Main Content ===== -->
     <v-main class="bg-grey-lighten-4">
-      <v-container fluid class="pa-4 pa-md-6 pa-xl-10">
+      <v-container fluid class="pa-4">
         <AlertMessage />
         <ConfirmModal />
         <slot />
@@ -20,22 +18,22 @@
 </template>
 
 <script>
-import Sidbar from "@/components/Sidbar.vue";
-import Header from "@/components/Header.vue";
-import AlertMessage from "@/components/AlertMessage.vue";
-import ConfirmModal from "@/components/ConfirmModal.vue";
+import Sidbar from "../Sidbar.vue"
+import Header from "@/components/Header.vue"
+import AlertMessage from "@/components/AlertMessage.vue"
+import ConfirmModal from "@/components/ConfirmModal.vue"
 
 export default {
   components: { Sidbar, Header, AlertMessage, ConfirmModal },
   data() {
     return {
-      isSidebarOpen: true,
-    };
+      drawer: true, // sidebar open/close
+    }
   },
   methods: {
     toggleSidebar() {
-      this.isSidebarOpen = !this.isSidebarOpen;
+      this.drawer = !this.drawer
     },
   },
-};
+}
 </script>

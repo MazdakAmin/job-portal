@@ -7,6 +7,7 @@ import router from './router';
 import { createPinia } from 'pinia';
 import vuetify from './plugins/vuetify';
 import '@mdi/font/css/materialdesignicons.css'
+import 'typeface-poppins'
 
 const app = createApp(App);
 

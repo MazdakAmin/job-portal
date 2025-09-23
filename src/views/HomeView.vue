@@ -1,4 +1,5 @@
 <template>
+  <NavBar />
   <AlertMessage />
   <Hero />
   <HomeCard />
@@ -15,13 +16,15 @@ import HomeCard from '@/components/HomeCard.vue';
 import JobListings from '@/components/JobListings.vue';
 import { RouterLink } from 'vue-router';
 import AlertMessage from '@/components/AlertMessage.vue';
+import NavBar from '@/components/NavBar.vue';
 export default {
   components: {
     Hero,
     HomeCard,
     JobListings,
     RouterLink,
-    AlertMessage
+    AlertMessage,
+    NavBar
   },
 }
 </script>
