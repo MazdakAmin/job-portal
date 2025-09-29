@@ -32,11 +32,11 @@
     </v-row>
 
     <JobForm
-      :show="showJobModal"
-      :formData="formData"
-      @submit="addJob"
-      @cancel="toggleForm"
-    />
+  v-model="showJobModal"
+  :formData="formData"
+  @submit="addJob"
+/>
+
   </v-container>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-   
+   <NavBar />
     <AlertMessage />
     <JobListings />
 </template>
@@ -7,10 +7,12 @@
 
 import JobListings from '@/components/JobListings.vue';
 import AlertMessage from '@/components/AlertMessage.vue';
+import NavBar from '@/components/NavBar.vue';
 export default {
     components: {
         JobListings,
-        AlertMessage
+        AlertMessage,
+        NavBar
     },
 
 }

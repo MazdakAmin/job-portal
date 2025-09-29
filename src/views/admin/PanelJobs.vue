@@ -47,8 +47,13 @@
       <Pagination :currentPage="currentPage" :totalPages="totalPages" @update:page="currentPage = $event" />
 
       <!-- Modal -->
-      <JobForm :show="showJobModal" :formData="formData" :mode="formMode" :showStatus="showStatus"
-        @submit="handleFormSubmit" @cancel="toggleForm" />
+     <JobForm
+  v-model="showJobModal"
+  :formData="formData"
+  :mode="formMode"
+  :showStatus="showStatus"
+  @submit="handleFormSubmit"
+/>
     </v-container>
   </AppLayout>
 </template>
